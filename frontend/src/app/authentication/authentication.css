@@ -1,0 +1,57 @@
+.auth-container{
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--secondary-color);
+  padding: 45px;
+  border-radius: 25px;
+  font-family: var(--font-base);
+  gap: 30px;
+  left: 50%;
+  top: 80px;
+  transform: translateX(-50%);
+}
+
+.form-type-selectors{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  border-bottom: 2px solid white;
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  color: white;
+  gap: 25px;
+}
+
+.form-field{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+input{
+  background-color: transparent;
+  border: 2px solid var(--primary-color);
+  border-radius: 15px;
+  height: 35px;
+  width: 400px;
+  color: white;
+  font-size: 1.2rem;
+  padding: 5px;
+}
+
+label{
+  font-size: 1.5rem;
+}
+
+.tab{
+  border: none;
+}
+
+.active{
+  background-color: #232b2e;
+}
