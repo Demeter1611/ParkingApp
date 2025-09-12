@@ -1,0 +1,33 @@
+section{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+}
+
+.tab-button-container{
+  display: inline-flex;
+  justify-content: center;
+  background-color: var(--secondary-color);
+  padding: 10px;
+  border-radius: 30px;
+}
+
+.tab{
+  border: none;
+}
+
+.active{
+  background-color: #232b2e;
+}
+
+.tab:hover{
+  padding-bottom: 5px;
+}
+
+.feature-container{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  margin-left: 30px;
+}

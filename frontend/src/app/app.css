@@ -1,0 +1,12 @@
+.top-bar{
+  display: flex;
+  padding: 10px 20px 10px 20px;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--primary-color);
+  font-family: var(--font-base);
+}
+
+.logo{
+  width: 75px;
+}

@@ -1,0 +1,51 @@
+:root {
+  --primary-color: #FF9800;
+  --secondary-color: #263238;
+  --accent-color: #388E3C;
+  --neutral-color: #BDBDBD;
+  --font-base: 'Roboto', sans-serif;
+  --content-padding: 10px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url('assets/background.jpg');
+  background-color: rgba(0,0,0,0.5);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  pointer-events: none;
+  z-index: 0;
+}
+
+main, header, footer, section {
+  position: relative;
+  z-index: 1;
+}
+
+button {
+  background-color: transparent;
+  font-size: 1rem;
+  color: var(--primary-color);
+  min-width: 125px;
+  height: 50px;
+  border: 1px solid var(--neutral-color);
+  border-radius: 25px;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: var(--secondary-color)
+}
