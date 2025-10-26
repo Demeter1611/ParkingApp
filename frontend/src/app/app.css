@@ -1,12 +1,25 @@
+html, body{
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+:host {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+}
+
 .top-bar{
+  flex-shrink: 0;
   display: flex;
   padding: 10px 20px 10px 20px;
   justify-content: space-between;
+  height: 60px;
   align-items: center;
   color: var(--primary-color);
   font-family: var(--font-base);
 }
 
 .logo{
-  width: 75px;
+  width: 50px;
 }

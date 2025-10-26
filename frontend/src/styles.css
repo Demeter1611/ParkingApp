@@ -1,8 +1,8 @@
 :root {
-  --primary-color: #FF9800;
-  --secondary-color: #263238;
-  --accent-color: #388E3C;
-  --neutral-color: #BDBDBD;
+  --primary-color: #FA7921;
+  --secondary-color: #0D1F2D;
+  --accent-color: #6C757D;
+  --neutral-color: #EAF2EF;
   --font-base: 'Roboto', sans-serif;
   --content-padding: 10px;
 }
@@ -35,17 +35,17 @@ main, header, footer, section {
   z-index: 1;
 }
 
-button {
+.primary-button {
   background-color: transparent;
   font-size: 1rem;
   color: var(--primary-color);
   min-width: 125px;
   height: 50px;
   border: 1px solid var(--neutral-color);
-  border-radius: 25px;
+  border-radius: 10px;
 }
 
-button:hover {
+.primary-button:hover {
   cursor: pointer;
   background-color: var(--secondary-color)
 }

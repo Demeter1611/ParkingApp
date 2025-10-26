@@ -1,18 +1,31 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { AuthenticationService } from './services/authentication-service';
+import { Component, inject, signal } from '@angular/core';
+import { RouterOutlet, RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, RouterLink],
   template:`
     <section class="top-bar">
-      <img class="logo" src="assets/logo.png">
-      <button>Login</button>
+      <a href="/">
+        <img class="logo" src="assets/parking-lot.png" >
+      </a>
+      @if(!authenticationService.isAuthenticated()){
+        <button routerLink="/auth" class="primary-button">Login</button>
+      }
+      @else{
+        <button>{{ authenticationService.userEmail }}</button>
+        <button (click)="authenticationService.logout()">Logout</button>
+      }
     </section>
-    <router-outlet/>
+    <content>
+      <router-outlet/>
+    </content>
   `,
   styleUrl: './app.css'
 })
 export class App {
   protected readonly title = signal('frontend');
+  authenticationService = inject(AuthenticationService);
 }

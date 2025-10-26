@@ -17,7 +17,7 @@
   display: flex;
   width: 100%;
   justify-content: center;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid var(--neutral-color);
 }
 
 form{
@@ -33,15 +33,24 @@ form{
   gap: 5px;
 }
 
-input{
+input, select{
   background-color: transparent;
   border: 2px solid var(--primary-color);
-  border-radius: 15px;
+  border-radius: 10px;
   height: 35px;
   width: 400px;
-  color: white;
+  color: var(--neutral-color);
   font-size: 1.2rem;
   padding: 5px;
+}
+
+select {
+  width: 100%;
+  height: 50px;
+}
+
+option{
+  background-color: var(--secondary-color);
 }
 
 label{
@@ -53,5 +62,13 @@ label{
 }
 
 .active{
-  background-color: #232b2e;
+  background-color: #13293a;
+}
+
+.error{
+  font-size: 0.8rem;
+  color: red;
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
 }

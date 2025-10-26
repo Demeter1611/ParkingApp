@@ -16,7 +16,7 @@ h1{
 
 p{
   font-size: 1.4rem;
-  color: white;
+  color: var(--neutral-color);
   padding-left: 10px;
   margin-top: -25px;
 }

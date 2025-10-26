@@ -10,8 +10,8 @@ import { FeatureCardComponent } from "../feature-card/feature-card";
   template:`
     <section>
       <div class="tab-button-container">
-        <button class="tab" [ngClass]="{'active': selectedTab === 'Employee'}" (click)="tabSwitch('Employee')">Employee</button>
-        <button class="tab" [ngClass]="{'active': selectedTab === 'Administrator'}" (click)="tabSwitch('Administrator')">Administrator</button>
+        <button class="primary-button tab" [ngClass]="{'active': selectedTab === 'Employee'}" (click)="tabSwitch('Employee')">Employee</button>
+        <button class="primary-button tab" [ngClass]="{'active': selectedTab === 'Administrator'}" (click)="tabSwitch('Administrator')">Administrator</button>
       </div>
       <div class="feature-container">
         @if (selectedTab == 'Employee') {

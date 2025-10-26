@@ -1,0 +1,30 @@
+body::before{
+  display: none;
+}
+body {
+  background-color: var(--secondary-color);
+  background-image: none;
+}
+app-dashboard{
+  display: flex;
+  border-top: 1px solid var(--accent-color);
+}
+app-nav-sidebar {
+  flex-shrink: 0;
+  overflow-y: auto;
+  width: 250px;
+}
+.top-bar{
+  background-color: #03060a;
+}
+
+h1 {
+  color: var(--primary-color);
+}
+
+.main-content{
+  background-color: var(--secondary-color);
+  padding: 15px;
+  flex-grow: 1;
+}
+
