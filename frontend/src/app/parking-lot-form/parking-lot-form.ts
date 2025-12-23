@@ -1,16 +1,17 @@
+import { ParkingLot } from '../interfaces/parkinglot';
 import { NgClass } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, input } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { ParkingLotService } from "../services/parking-lot-service";
 
 @Component({
-  selector: 'app-create-parking-lot',
+  selector: 'app-parking-lot-form',
   imports: [ReactiveFormsModule, FontAwesomeModule, NgClass],
   template: `
     <section>
-      <h1>Create a new parking lot</h1>
+      <h1>{{ formTitle }}</h1>
       <form [formGroup]="parkingLotForm">
         <div class="form-field">
           <label for="name">Name</label>
@@ -55,19 +56,27 @@ import { ParkingLotService } from "../services/parking-lot-service";
             <span class="checkmark"></span>
           </label>
         </div>
-
-        <button class="primary-button" type="submit" (click)="onSubmit()">Create lot</button>
       </form>
+      <div class="form-buttons">
+        <button class="form-btn submit" type="submit" (click)="onSubmit()">{{ buttonText }}</button>
+        @if(parkingLot()){
+          <button class="form-btn delete" (click)="onDelete()">Delete parking lot</button>
+        }
+      </div>
     </section>
   `,
-  styleUrl: './create-parking-lot.css',
+  styleUrl: 'parking-lot-form.css',
 })
-export class CreateParkingLotComponent {
+export class ParkingLotFormComponent {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
+  formTitle = "Create a new parking lot"
+  buttonText = "Create lot"
+
   parkingLotForm!: FormGroup;
   isAdvancedCollapsed: boolean = true;
   parkingLotService = inject(ParkingLotService);
+  parkingLot = input<ParkingLot>();
 
   ngOnInit(){
     this.parkingLotForm = new FormGroup(
@@ -89,6 +98,13 @@ export class CreateParkingLotComponent {
         simplifiedGridEnabled: new FormControl(false)
       }
     )
+
+    const parkingLotData = this.parkingLot();
+    if(parkingLotData){
+      this.formTitle = "Edit your parking lot"
+      this.buttonText = "Make changes"
+      this.parkingLotForm.patchValue(parkingLotData);
+    }
   }
 
   collapseAdvanced(){
@@ -97,10 +113,27 @@ export class CreateParkingLotComponent {
 
   async onSubmit(): Promise<void> {
     try{
-      await this.parkingLotService.submitAddRequest(this.parkingLotForm.value);
+      const parkingLotId = this.parkingLot()?.id;
+      if(parkingLotId){
+        await this.parkingLotService.submitUpdateRequest(parkingLotId, this.parkingLotForm.value);
+      }
+      else{
+        await this.parkingLotService.submitAddRequest(this.parkingLotForm.value);
+      }
       console.log('Lot created');
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async onDelete(): Promise<void> {
+    try{
+      const parkingLotId = this.parkingLot()?.id;
+      if(parkingLotId){
+        await this.parkingLotService.submitDeleteRequest(parkingLotId);
+      }
+    } catch (error) {
+    console.error(error);
     }
   }
 }

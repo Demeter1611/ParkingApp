@@ -1,7 +1,7 @@
-const Router = require('koa-router')
+const Router = require('koa-router');
 const router = new Router({
     prefix: '/parking-lot'
-})
+});
 
 const parkingLotAPI = require('../resources/parking-lot');
 const { verifyLogin, roleChecker, ROLE_LIST } = require('../middlewares/auth-middleware');
@@ -25,6 +25,41 @@ router.post('/', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next)
     } catch (err) {
         throw {status: 400, message: { error: 'Invalid field types' }};
     }
+})
+
+router.get('/:id', async(ctx, next) => {
+    const userId = ctx.params.id;
+    const parkingLots = await parkingLotAPI.getByUserId(userId);
+    ctx.response.status = 200;
+    ctx.response.body = parkingLots;
+})
+
+router.patch('/:id', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next) => {
+    const parkingLotId = ctx.params.id;
+
+    const updatedEntity = await parkingLotAPI.update({
+        id: parkingLotId,
+        ...ctx.request.body
+    })
+
+    if(!updatedEntity) {
+        throw {status: 404, message: { error: 'Parking lot not found' }};
+    }
+    
+    ctx.response.status = 200;
+    ctx.response.body = updatedEntity;
+})
+
+router.delete('/:id', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next) => {
+    const parkingLotId = ctx.params.id;
+    const deleteResult = await parkingLotAPI.delete(parkingLotId);
+
+    if(!deleteResult){
+        throw {status: 404, message: { error: 'Parking lot not found' }};
+    }
+
+    ctx.response.status = 200;
+    ctx.response.body = {message: 'Parking lot has been deleted'};
 })
 
 module.exports = {

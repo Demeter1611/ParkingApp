@@ -1,18 +1,19 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { NavSidebar } from "../nav-sidebar/nav-sidebar";
-import { CreateParkingLotComponent } from "../create-parking-lot/create-parking-lot";
+import { ManageParkingLotsComponent } from "../manage-parking-lots/manage-parking-lots";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NavSidebar, CreateParkingLotComponent],
+  imports: [NavSidebar, ManageParkingLotsComponent],
   template: `
     <app-nav-sidebar/>
     <div class="main-content">
-      <app-create-parking-lot/>
+      <app-manage-parking-lots/>
     </div>
   `,
   styleUrl: './dashboard.css',
   encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent {
+
 }

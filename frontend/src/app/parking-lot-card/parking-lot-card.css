@@ -1,0 +1,38 @@
+section{
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-base);
+  padding: 15px;
+  background-color: #1D2A3A;
+  border: 2px solid var(--neutral-color);
+  border-radius: 5px;
+  width: 325px;
+
+}
+.name{
+  color: var(--primary-color);
+  font-size: 2.4rem;
+}
+.address{
+  color: white;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+}
+
+.subtext{
+  color: var(--grey-font-color);
+  font-size: 1rem;
+}
+
+section:hover{
+  top: -3px;
+  background-color: #202f41;
+  cursor: pointer;
+}
+
+:host(.selected) section {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px var(--accent-color);
+  top: -3px;
+  background-color: #202f41;
+}

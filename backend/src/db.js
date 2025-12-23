@@ -59,5 +59,5 @@ async function connectToDatabase(config){
 module.exports = {
     connectToDatabase,
     runMigrations,
-    sqlRequest
+    sqlRequest,
 }
