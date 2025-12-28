@@ -5,24 +5,20 @@ body {
   background-color: var(--secondary-color);
   background-image: none;
 }
-app-dashboard{
+.dashboard{
   display: flex;
+  flex-direction: row;
   border-top: 1px solid var(--accent-color);
+  overflow: hidden;
+  height: 100%;
+  min-height: 0;
 }
-app-nav-sidebar {
-  flex-shrink: 0;
-  overflow-y: auto;
-  width: 250px;
-}
+
 .top-bar{
   background-color: #03060a;
 }
 
 h1 {
   color: var(--primary-color);
-}
-
-.main-content{
-  width: 100%;
 }
 

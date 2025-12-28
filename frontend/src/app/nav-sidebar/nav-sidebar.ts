@@ -15,7 +15,7 @@ import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
       </button>
       <ul class="expanded-options" [ngClass]="{'shown': currentlyExpandedTabs.includes('Parking')}">
         <li>Manage parking lots</li>
-        <li>Draw parking spots</li>
+        <li>View parking lots</li>
         <li>Assign ownership of spots</li>
       </ul>
 

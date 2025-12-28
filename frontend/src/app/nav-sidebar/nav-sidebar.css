@@ -4,8 +4,6 @@ section{
   flex-direction: column;
   font-family: var(--font-base);
   color: var(--neutral-color);
-  float: left;
-  position: absolute;
   width: 250px;
   height: 100%;
   padding-top: 15px;

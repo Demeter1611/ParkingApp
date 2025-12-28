@@ -1,0 +1,29 @@
+.parking-spot{
+  width: 140px;
+  height: 175px;
+  padding: 0px 25px 0px 25px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  align-items: center;
+  font-family: var(--font-base);
+  border-radius: 5px;
+}
+
+.parking-spot-name{
+  color: white;
+  font-size: 2rem;
+}
+
+.occupied {
+  background-color: rgba(213, 46, 46, 0.378);
+  border: 1px solid red;
+}
+
+.occupied .parking-spot-name{
+  color: rgb(225, 19, 19);
+}
+
+.occupied .parking-spot-status{
+  color: rgb(225, 19, 19);
+}

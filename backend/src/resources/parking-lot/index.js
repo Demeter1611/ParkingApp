@@ -1,5 +1,18 @@
 const { sqlRequest } = require('../../db.js');
 
+const PARKING_LOT_FIELDS = `
+        p.id,
+        p.name,
+        p.address,
+        p.maxCapacity,
+        p.timeslotsEnabled,
+        p.sharingEnabled,
+        p.temporaryOnlyEnabled,
+        p.visitorSpotsEnabled,
+        p.simplifiedGridEnabled,
+        p.userId
+`;
+
 module.exports = {
     add: async (name, address, maxCapacity, timeslotsEnabled, sharingEnabled, temporaryOnlyEnabled, visitorSpotsEnabled, simplifiedGridEnabled, userId)=>{
         const result = await sqlRequest()
@@ -24,15 +37,7 @@ module.exports = {
         const result = await sqlRequest()
             .input('id', id)
             .query(`
-                    SELECT 
-                        p.name AS name,
-                        p.address AS address,
-                        p.maxCapacity AS maxCapacity,
-                        p.timeslotsEnabled AS timeslotsEnabled,
-                        p.sharingEnabled AS sharingEnabled,
-                        p.visitorSpotsEnabled AS visitorSpotsEnabled,
-                        p.simplifiedGridEnabled AS simplifiedGridEnabled,
-                        p.userId as userId
+                    SELECT ${PARKING_LOT_FIELDS}
                     FROM ParkingLots p
                     WHERE p.id = @id
                 `);
@@ -42,7 +47,8 @@ module.exports = {
         const result = await sqlRequest()
             .input('userId', userId)
             .query(`
-                    SELECT * FROM ParkingLots WHERE userId=@userId
+                    SELECT ${PARKING_LOT_FIELDS}
+                    FROM ParkingLots p WHERE userId=@userId
                 `)
         return result.recordset;
     },
@@ -77,7 +83,8 @@ module.exports = {
         const selectResult = await sqlRequest()
             .input('id', newInfo.id)
             .query(`
-                    SELECT * FROM ParkingLots WHERE id = @id
+                    SELECT ${PARKING_LOT_FIELDS}
+                    FROM ParkingLots p WHERE id = @id
                 `);
         return selectResult.recordset[0];
     },

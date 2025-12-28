@@ -7,21 +7,23 @@ import { RouterOutlet, RouterLink } from '@angular/router';
   selector: 'app-root',
   imports: [RouterOutlet, RouterLink],
   template:`
-    <section class="top-bar">
-      <a href="/">
-        <img class="logo" src="assets/parking-lot.png" >
-      </a>
-      @if(!authenticationService.isAuthenticated()){
-        <button routerLink="/auth" class="primary-button">Login</button>
-      }
-      @else{
-        <button>{{ authenticationService.userEmail }}</button>
-        <button (click)="authenticationService.logout()">Logout</button>
-      }
-    </section>
-    <content>
-      <router-outlet/>
-    </content>
+    <div class="container">
+      <section class="top-bar">
+        <a href="/">
+          <img class="logo" src="assets/parking-lot.png" >
+        </a>
+        @if(!authenticationService.isAuthenticated()){
+          <button routerLink="/auth" class="primary-button">Login</button>
+        }
+        @else{
+          <button>{{ authenticationService.userEmail }}</button>
+          <button (click)="authenticationService.logout()">Logout</button>
+        }
+      </section>
+      <main class="content">
+        <router-outlet/>
+      </main>
+    </div>
   `,
   styleUrl: './app.css'
 })

@@ -34,7 +34,7 @@ router.get('/:id', async(ctx, next) => {
 
 router.post('/bulk', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next) => {
     /*
-        request.body format:
+        request body format:
             parkingSpotGenerator: {
                 pattern: @string
                 

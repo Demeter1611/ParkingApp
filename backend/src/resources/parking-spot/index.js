@@ -1,6 +1,11 @@
 const { sqlRequest } = require("../../db.js");
 const sql = require('mssql');
 
+const PARKING_SPOT_FIELDS = `
+    p.id,
+    p.name
+`
+
 module.exports = {
     add: async (name, parkingLotId) => {
         const result = await sqlRequest()
@@ -36,8 +41,7 @@ module.exports = {
         const result = await sqlRequest()
             .input('parkingLotId', parkingLotId)
             .query(`
-                SELECT 
-                    p.name AS name
+                SELECT ${PARKING_SPOT_FIELDS}
                 FROM ParkingSpots p
                 WHERE p.parkingLotId = @parkingLotId
                 `);
