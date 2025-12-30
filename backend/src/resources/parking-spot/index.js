@@ -46,5 +46,5 @@ module.exports = {
                 WHERE p.parkingLotId = @parkingLotId
                 `);
         return result.recordset;
-    }
+    },
 }

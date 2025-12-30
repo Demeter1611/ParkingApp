@@ -1,5 +1,12 @@
 const { sqlRequest } = require('../../db');
 
+const USER_FIELDS = `
+        u.id,
+        u.email,
+        u.username
+    `
+
+
 module.exports = {
     add: async (password, email, username, role)=>{
         const result = await sqlRequest()
@@ -39,5 +46,19 @@ module.exports = {
             .input('email', email)
             .query('select * from Users where email = @email')
         return result.recordset.length > 0;
+    },
+
+    getByMail: async(email) => {
+        const result = await sqlRequest()
+            .input('email', email)
+            .query(`
+                    SELECT ${USER_FIELDS},
+                        r.name AS roleName
+                    FROM Users u
+                    INNER JOIN Roles r
+                        ON r.id = u.roleId
+                    WHERE u.email = @email
+                `)
+        return result.recordset[0];
     }
 }

@@ -96,5 +96,57 @@ module.exports = {
                 WHERE id = @id
                 `)
         return result.rowsAffected[0] > 0;
+    },
+
+    addUserParkingAccess: async(parkingLotId, userId) => {
+        const result = await sqlRequest()
+            .input('parkingLotId', parkingLotId)
+            .input('userId', userId)
+            .query(`
+                    INSERT INTO UserParkingAccess(userId, parkingLotId)
+                    VALUES(@userId, @parkingLotId)
+                `)
+        return { userId, parkingLotId };
+    },
+
+    deleteUserParkingAccess: async(parkingLotId, userId) => {
+        const result = await sqlRequest()
+            .input('parkingLotId', parkingLotId)
+            .input('userId', userId)
+            .query(`
+                    DELETE FROM UserParkingAccess
+                    WHERE parkingLotId = @parkingLotId
+                        AND userId = @userId
+                `)
+        return result.rowsAffected[0] > 0;
+    },
+
+    getAllUsersWithAccess: async(parkingLotId) => {
+        const result = await sqlRequest()
+            .input('parkingLotId', parkingLotId)
+            .query(`
+                    SELECT u.id,
+                        u.email,
+                        u.username
+                    FROM UserParkingAccess upa
+                    LEFT JOIN Users u
+                        ON upa.userId = u.id
+                    WHERE upa.parkingLotId = @parkingLotId
+                    ORDER BY u.username ASC
+                `)
+        return result.recordset;
+    },
+
+    checkAccess: async(parkingLotId, userId) => {
+        const result = await sqlRequest()
+            .input('parkingLotId', parkingLotId)
+            .input('userId', userId)
+            .query(`
+                    SELECT upa.parkingLotId,
+                        upa.userId
+                    WHERE upa.parkingLotId = @parkingLotId
+                        AND upa.userId = @userId
+                `)
+        return result.recordset.length !== 0;
     }
 }

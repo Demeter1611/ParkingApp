@@ -4,7 +4,35 @@ const router = new Router({
 });
 
 const parkingLotAPI = require('../resources/parking-lot');
+const parkingSpotAPI = require('../resources/parking-spot');
+const ReservationAPI = require('../resources/reservations');
 const { verifyLogin, roleChecker, ROLE_LIST } = require('../middlewares/auth-middleware');
+
+async function getAllSpotsWithStatus(parkingLotId, targetDate){
+    const spots = await ReservationAPI.getOccupancyStatus(parkingLotId, targetDate);
+    
+    const mappedSpots = spots.map(spot => {
+        let status = 'available';
+
+        if(spot.ownerId){
+            if(spot.windowId){
+                status = spot.occupantId ? 'occupied' : 'available';
+            }
+            else{
+                status = 'locked';
+            }
+        } else {
+            status = spot.occupantId ? 'occupied' : 'available';
+        }
+
+        return {
+            ...spot,
+            status: status
+        }
+    })
+
+    return mappedSpots;
+}
 
 router.post('/', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next) => {
     const { name, address, maxCapacity, timeslotsEnabled, sharingEnabled, temporaryOnlyEnabled, visitorSpotsEnabled, simplifiedGridEnabled} = ctx.request.body;
@@ -60,6 +88,57 @@ router.delete('/:id', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, 
 
     ctx.response.status = 200;
     ctx.response.body = {message: 'Parking lot has been deleted'};
+})
+
+router.get('/:id/spots-with-status', async(ctx, next) => {
+    const parkingLotId = ctx.params.id;
+    const { targetDate } = ctx.query;
+
+    const spots = await getAllSpotsWithStatus(parkingLotId, targetDate);
+
+    ctx.response.status = 200;
+    ctx.response.body = spots;
+})
+
+router.post('/:id/give-access/:userId', async(ctx, next) => {
+    const parkingLotId = ctx.params.id;
+    const userId = ctx.params.userId;
+    
+    if(!userId){
+        throw { status: 400, message: { error: 'All fields are required' }};
+    }
+
+    try{
+        const userParkingAccessId = await parkingLotAPI.addUserParkingAccess(parkingLotId, userId);
+
+        ctx.response.status = 201;
+        ctx.response.body = {
+            ...userParkingAccessId
+        };
+    } catch (err) {
+        throw { status: 400, message: { error: 'Invalid field types' }};
+    }
+})
+
+router.delete('/:id/revoke-access/:userId', async(ctx, next) => {
+    const parkingLotId = ctx.params.id;
+    const userId = ctx.params.userId;
+    const deleteResult = await parkingLotAPI.deleteUserParkingAccess(parkingLotId, userId);
+
+    if(!deleteResult){
+        throw { status: 404, message: { error: 'User does not have access to parking lot' }};
+    }
+
+    ctx.response.status = 200;
+    ctx.response.body = {message: 'User access revoked'};
+})
+
+router.get('/:id/users-with-access', async(ctx, next) => {
+    const parkingLotId = ctx.params.id;
+    const users = await parkingLotAPI.getAllUsersWithAccess(parkingLotId);
+
+    ctx.response.status = 200;
+    ctx.response.body = users;
 })
 
 module.exports = {
