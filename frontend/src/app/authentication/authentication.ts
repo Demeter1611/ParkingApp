@@ -9,6 +9,7 @@ import { AuthenticationService } from '../services/authentication-service';
   selector: 'app-authentication',
   imports: [ReactiveFormsModule, NgClass],
   template: `
+  <main class="hidden-scroll">
     <section class="auth-container">
       <div class="form-type-selectors">
         <button class="primary-button tab" [ngClass]="{'active': selectedForm === 'Login'}" (click)="tabSwitch('Login')">Login</button>
@@ -121,6 +122,7 @@ import { AuthenticationService } from '../services/authentication-service';
         </form>
       }
     </section>
+  </main>
   `,
   styleUrl: './authentication.css'
 })

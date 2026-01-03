@@ -1,7 +1,9 @@
+import { ParkingLotService } from './../services/parking-lot-service';
 import { ParkingSpot } from './../interfaces/parkingspot';
 import { Component, inject, input } from "@angular/core";
 import { ParkingSpotService } from "../services/parking-spot-service";
 import { ParkingSpotCardComponent } from "../parking-spot/parking-spot-card";
+import { ParkingLot } from '../interfaces/parkinglot';
 
 @Component({
   selector: 'app-parking-lot-view',
@@ -24,11 +26,12 @@ import { ParkingSpotCardComponent } from "../parking-spot/parking-spot-card";
 })
 export class ParkingLotViewComponent {
   parkingSpotService = inject(ParkingSpotService);
+  parkingLotService = inject(ParkingLotService);
   parkingSpots: ParkingSpot[] = [];
-  currentParkingLot = input.required<ParkingSpot>();
+  currentParkingLot = input.required<ParkingLot>();
   async ngOnInit(){
     const parkingLot = this.currentParkingLot();
-    this.parkingSpots = await this.parkingSpotService.getSpotsByLot(parkingLot.id);
+    this.parkingSpots = await this.parkingLotService.getSpotsWithStatus(parkingLot.id);
     console.log(this.parkingSpots);
   }
 }

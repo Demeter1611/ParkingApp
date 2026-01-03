@@ -79,4 +79,95 @@ export class ParkingLotService {
       console.error(err);
     }
   }
+
+  async getSpots(parkingLotId: number){
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken){
+        const response = await fetch(`${this.url}/${parkingLotId}/spots`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authToken
+          }
+        });
+        return await response.json();
+      }
+    } catch(err){
+      console.error(err);
+    }
+  }
+
+  async getSpotsWithStatus(parkingLotId: number){
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken){
+        const response = await fetch(`${this.url}/${parkingLotId}/spots-with-status`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authToken
+          }
+        });
+
+        return await response.json();
+      }
+    } catch(err){
+      console.error(err);
+    }
+  }
+
+  async addEmployee(parkingLotId: number, userId: number){
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken){
+        const response = await fetch(`${this.url}/${parkingLotId}/give-access/${userId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authToken
+          }
+        });
+
+        return await response.json();
+      }
+    } catch(err){
+      console.error(err);
+    }
+  }
+
+  async removeEmployee(parkingLotId: number, userId: number){
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken){
+        const response = await fetch(`${this.url}/${parkingLotId}/revoke-access/${userId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authToken
+          }
+        });
+
+        return await response.json();
+      }
+    } catch(err){
+      console.error(err);
+    }
+  }
+
+  async getAllEmployees(parkingLotId: number){
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken){
+        const response = await fetch(`${this.url}/${parkingLotId}/users-with-access`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authToken
+          }
+        });
+
+        return await response.json();
+      }
+    } catch(err){
+      console.error(err);
+    }
+  }
 }

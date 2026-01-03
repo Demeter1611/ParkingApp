@@ -1,0 +1,20 @@
+.employee-card{
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-base);
+  align-items: center;
+  padding: 15px;
+  color: white;
+  gap: 10px;
+}
+
+.title{
+  font-size: 1.8rem;
+}
+
+.revoke-button{
+  background-color: transparent;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+}

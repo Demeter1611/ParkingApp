@@ -26,12 +26,6 @@ router.post('/', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next)
     }
 })
 
-router.get('/:id', async(ctx, next) => {
-    const parkingLotId = ctx.params.id;
-    const parkingSpots = await parkingSpotAPI.getByParkingLotId(parkingLotId);
-    ctx.response.status = 200;
-    ctx.response.body = parkingSpots;
-})
 
 router.post('/bulk', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next) => {
     /*
@@ -152,7 +146,6 @@ router.delete('/:id/reclaim/:windowid', async(ctx, next) => {
     try{
         const deleteResult = await reservationAPI.deleteAvailabilityWindow(windowId);
         
-        //nu mg
         const conflictingReservations = await reservationAPI.getReservationByDate(spotId, startDate, endDate);
         console.log(conflictingReservations);
 

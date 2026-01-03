@@ -127,7 +127,8 @@ module.exports = {
             .query(`
                     SELECT u.id,
                         u.email,
-                        u.username
+                        u.username,
+                        u.carplate
                     FROM UserParkingAccess upa
                     LEFT JOIN Users u
                         ON upa.userId = u.id

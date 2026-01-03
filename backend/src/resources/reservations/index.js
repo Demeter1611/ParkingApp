@@ -171,19 +171,28 @@ module.exports = {
                         p.name,
                         
                         a.userId AS ownerId,
-                        
+                        u1.username AS ownerUsername,
+                        u1.carplate AS ownerCarplate,
+
                         w.id AS windowId,
 
-                        r.userId AS occupantId
+
+                        r.userId AS occupantId,
+                        u2.username AS occupantUsername,
+                        u2.carplate AS occupantCarplate
 
                     FROM ParkingSpots p
                     LEFT JOIN Allocations a ON p.id = a.spotId
+                
+                    LEFT JOIN Users u1 ON a.userId = u1.id
 
                     LEFT JOIN AvailabilityWindows w ON p.id = w.spotId
                         AND @targetDate BETWEEN w.startDate and w.endDate
 
                     LEFT JOIN Reservations r ON p.id = r.spotId
                         AND @targetDate BETWEEN r.startDate AND r.endDate
+
+                    LEFT JOIN Users u2 ON r.userId = u2.id
 
                     WHERE p.parkingLotId = @parkingLotId
                 `);

@@ -44,14 +44,71 @@ export class ParkingSpotService {
     }
   }
 
-  async getSpotsByLot(parkingLotId: number){
+  async allocateSpot(parkingSpotId: number, userId: number){
     try{
       const authToken = this.authenticationService.token;
-      const userId = this.authenticationService.user.id;
       if(authToken){
-        const response = await fetch(`${this.url}/${parkingLotId}`, {
+        const response = await fetch(`${this.url}/${parkingSpotId}/allocate`, {
+          method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application-json',
+            'Authorization': authToken
+          },
+          body: JSON.stringify(userId)
+        });
+        return await response.json();
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  async deallocateSpot(parkingSpotId: number, userId: number){
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken){
+        const response = await fetch(`${this.url}/${parkingSpotId}/deallocate`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application-json',
+            'Authorization': authToken
+          },
+          body: JSON.stringify(userId)
+        });
+        return await response.json();
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  async releaseSpot(parkingSpotId: number, data: { startDate: Date, endDate: Date }){
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken){
+        const response = await fetch(`${this.url}/${parkingSpotId}/release`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application-json',
+            'Authorization': authToken
+          },
+          body: JSON.stringify(data)
+        });
+        return await response.json();
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  async reclaimSpot(parkingSpotId: number, availabilityWindowId: number) {
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken){
+        const response = await fetch(`${this.url}/${parkingSpotId}/reclaim/${availabilityWindowId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application-json',
             'Authorization': authToken
           }
         });

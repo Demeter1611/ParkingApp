@@ -5,6 +5,7 @@ const router = new Router({
 
 const userAPI = require('../resources/user');
 const jwt = require('../../jwt/helpFunctions');
+const { verifyLogin } = require('../middlewares/auth-middleware');
 
 function isEmailValid(email){
     splittedEmail = email.split('@');
@@ -57,7 +58,7 @@ router.post('/login', async (ctx, next) => {
 })
 
 router.post('/register', async (ctx, next) => {
-    const { password, email, username, role } = ctx.request.body;
+    const { password, email, username, carplate, role } = ctx.request.body;
 
     if(!isEmailValid(email)){
         throw {status: 400, message: { error: 'Invalid email!' }};
@@ -79,7 +80,7 @@ router.post('/register', async (ctx, next) => {
         throw {status: 400, message: { error: 'Mail already exists!' }};
     }
 
-    const userAddResponse = await userAPI.add(password, email, username, role);
+    const userAddResponse = await userAPI.add(password, email, username, carplate, role);
     if(userAddResponse.length == 0){
         throw {status: 401, message: { error: 'Invalid credentials!' }};
     }
@@ -94,7 +95,26 @@ router.post('/register', async (ctx, next) => {
     };
 })
 
+router.patch('/:id', verifyLogin, async(ctx, next) => {
+    try{
+        const updatedUser = await userAPI.update({...ctx.request.body, id: ctx.params.id});
+        ctx.response.status = 200;
+        ctx.response.body = updatedUser;
+    } catch(err){
+        throw { status: 400, message: { error: 'Request failed' }};
+    }
+})
 
+router.get('/search-suggestions', async(ctx, next) => {
+    const { searchTerm, parkingLotId} = ctx.query;
+    try{
+        const searchResult = await userAPI.getSearchSuggestions(searchTerm, parkingLotId);
+        ctx.response.status = 200;
+        ctx.response.body = searchResult;
+    } catch(err){
+        throw { status: 400, message: { erorr: 'Request failed' }};
+    }
+})
 
 module.exports = {
     router

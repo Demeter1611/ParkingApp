@@ -90,6 +90,13 @@ router.delete('/:id', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, 
     ctx.response.body = {message: 'Parking lot has been deleted'};
 })
 
+router.get('/:id/spots', async(ctx, next) => {
+    const parkingLotId = ctx.params.id;
+    const parkingSpots = await parkingSpotAPI.getByParkingLotId(parkingLotId);
+    ctx.response.status = 200;
+    ctx.response.body = parkingSpots;
+})
+
 router.get('/:id/spots-with-status', async(ctx, next) => {
     const parkingLotId = ctx.params.id;
     const { targetDate } = ctx.query;
