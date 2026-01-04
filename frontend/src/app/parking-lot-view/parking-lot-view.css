@@ -1,11 +1,16 @@
-section{
-  overflow: hidden;
+.parking-lot-view{
+  display: flex;
+  padding: 10px;
+}
+app-parking-lot-grid{
+  overflow: auto;
+  height: 700px;
 }
 
-.parking-map{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 25px;
-  padding: 15px;
+app-parking-spot-details{
+  height: 700px;
+}
+
+.invisible{
+  display: none;
 }

@@ -97,11 +97,12 @@ export class ParkingLotService {
     }
   }
 
-  async getSpotsWithStatus(parkingLotId: number){
+  async getSpotsWithStatus(parkingLotId: number, targetDate: Date){
     try{
       const authToken = this.authenticationService.token;
+      const dateParam = targetDate.toISOString().split('T')[0];
       if(authToken){
-        const response = await fetch(`${this.url}/${parkingLotId}/spots-with-status`, {
+        const response = await fetch(`${this.url}/${parkingLotId}/spots-with-status?targetDate=${dateParam}`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': authToken

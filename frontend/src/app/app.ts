@@ -8,7 +8,7 @@ import { RouterOutlet, RouterLink } from '@angular/router';
   imports: [RouterOutlet, RouterLink],
   template:`
     <div class="container">
-      <section class="top-bar">
+      <!-- <section class="top-bar">
         <a href="/">
           <img class="logo" src="assets/parking-lot.png" >
         </a>
@@ -19,7 +19,7 @@ import { RouterOutlet, RouterLink } from '@angular/router';
           <button>{{ authenticationService.userEmail }}</button>
           <button (click)="authenticationService.logout()">Logout</button>
         }
-      </section>
+      </section> -->
       <main class="content">
         <router-outlet/>
       </main>

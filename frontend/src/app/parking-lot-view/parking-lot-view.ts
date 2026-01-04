@@ -1,37 +1,41 @@
-import { ParkingLotService } from './../services/parking-lot-service';
-import { ParkingSpot } from './../interfaces/parkingspot';
-import { Component, inject, input } from "@angular/core";
-import { ParkingSpotService } from "../services/parking-spot-service";
-import { ParkingSpotCardComponent } from "../parking-spot/parking-spot-card";
-import { ParkingLot } from '../interfaces/parkinglot';
+import { ParkingLot } from './../interfaces/parkinglot';
+import { Component, input } from "@angular/core";
+import { ParkingLotGridComponent } from "./parking-lot-grid/parking-lot-grid";
+import { ParkingSpot } from '../interfaces/parkingspot';
+import ParkingSpotDetailsComponent from "./parking-spot-details/parking-spot-details";
 
 @Component({
   selector: 'app-parking-lot-view',
-  template: `
-    <section>
-      @if(parkingSpots.length === 0){
-        <h1>No parking spots available</h1>
-      }
-      @else{
-        <div class="parking-map">
-        @for(parkingSpot of parkingSpots; track parkingSpot.id){
-            <app-parking-spot [parkingSpot] = "parkingSpot"/>
-          }
-        </div>
-      }
-    </section>
+  template:`
+  <section class="parking-lot-view">
+    <app-parking-lot-grid [currentParkingLot]="currentParkingLot()" class="hidden-scroll"
+      (parkingSpotSelected)="handleSpotSelection($event)"/>
+    @if(selectedSpot){
+      <app-parking-spot-details [parkingSpot]="selectedSpot"/>
+    }
+  </section>
   `,
-  styleUrl: 'parking-lot-view.css',
-  imports: [ParkingSpotCardComponent]
+  styleUrls: ['parking-lot-view.css'],
+  imports: [ParkingLotGridComponent, ParkingSpotDetailsComponent]
 })
-export class ParkingLotViewComponent {
-  parkingSpotService = inject(ParkingSpotService);
-  parkingLotService = inject(ParkingLotService);
-  parkingSpots: ParkingSpot[] = [];
+export class ParkingLotViewComponent{
   currentParkingLot = input.required<ParkingLot>();
-  async ngOnInit(){
-    const parkingLot = this.currentParkingLot();
-    this.parkingSpots = await this.parkingLotService.getSpotsWithStatus(parkingLot.id);
-    console.log(this.parkingSpots);
+  selectedSpot: ParkingSpot | null = null;
+
+  handleSpotSelection(spot: ParkingSpot){
+    this.selectedSpot = spot;
+  }
+
+  mockParkingSpot: ParkingSpot = {
+    id: 7,
+    name:'A-000',
+    occupantId: null,
+    occupantUsername: null,
+    occupantCarplate: null,
+    ownerId: 4,
+    ownerUsername: 'utilizator',
+    ownerCarplate: 'HR 33 ABC',
+    status: 'locked',
+    windowId: null,
   }
 }

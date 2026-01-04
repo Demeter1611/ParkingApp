@@ -1,12 +1,12 @@
 export interface ParkingSpot{
   id: number,
   name: string,
-  occupantId: number,
-  occupantUsername: string,
-  occupantCarplate: string;
-  ownerId: number,
-  ownerUsername: string,
-  ownerCarplate: string,
+  occupantId: number | null,
+  occupantUsername: string | null,
+  occupantCarplate: string | null;
+  ownerId: number | null,
+  ownerUsername: string | null,
+  ownerCarplate: string | null,
   status: string,
-  windowId: number
+  windowId: number | null
 }

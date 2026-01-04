@@ -162,6 +162,7 @@ module.exports = {
     },
 
     getOccupancyStatus: async(parkingLotId, targetDate) => {
+        console.log(targetDate);
         const result = await sqlRequest()
             .input('parkingLotId', parkingLotId)
             .input('targetDate', targetDate)

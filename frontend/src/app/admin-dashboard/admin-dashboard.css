@@ -1,0 +1,28 @@
+.admin-dashboard{
+  background-color: #0f1920;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-base);
+  padding: 10px;
+}
+
+.navigation{
+  display: flex;
+  flex-direction: column;
+}
+
+.navigation-crumbs{
+  color: rgb(211, 211, 211);
+  font-size: 1rem;
+  margin: 0px;
+  margin-left: 15px;
+}
+
+.current-page{
+  color: white;
+  font-weight: bolder;
+  font-size: 2.5rem;
+  margin: 0px;
+}
+

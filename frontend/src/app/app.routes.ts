@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home';
 import { AuthenticationComponent } from './authentication/authentication';
-import { DashboardComponent } from './dashboard/dashboard';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard';
 
 export const routes: Routes = [
   {
@@ -14,6 +14,6 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: DashboardComponent
+    component: AdminDashboardComponent
   }
 ];

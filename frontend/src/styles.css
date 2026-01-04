@@ -53,8 +53,6 @@ main, header, footer, section {
 }
 
 .hidden-scroll {
-  height: 100%;
-  overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

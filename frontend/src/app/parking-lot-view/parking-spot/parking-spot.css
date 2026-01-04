@@ -1,0 +1,18 @@
+.parking-spot{
+  width: 40px;
+  height: 65px;
+  border-radius: 5px;
+}
+
+.parking-spot:hover{
+  cursor: pointer;
+}
+
+.unoccupied{
+  background-color: #FA7921;
+}
+
+.occupied{
+  background-color: #67564c;
+}
+
