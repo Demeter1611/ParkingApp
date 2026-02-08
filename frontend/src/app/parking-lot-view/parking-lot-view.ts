@@ -23,19 +23,11 @@ export class ParkingLotViewComponent{
   selectedSpot: ParkingSpot | null = null;
 
   handleSpotSelection(spot: ParkingSpot){
-    this.selectedSpot = spot;
-  }
-
-  mockParkingSpot: ParkingSpot = {
-    id: 7,
-    name:'A-000',
-    occupantId: null,
-    occupantUsername: null,
-    occupantCarplate: null,
-    ownerId: 4,
-    ownerUsername: 'utilizator',
-    ownerCarplate: 'HR 33 ABC',
-    status: 'locked',
-    windowId: null,
+    if(this.selectedSpot === spot){
+      this.selectedSpot = null;
+    }
+    else{
+      this.selectedSpot = spot;
+    }
   }
 }

@@ -1,0 +1,17 @@
+.manage-parking-lots{
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  padding-right: 0px;
+  gap: 20px;
+}
+
+.parking-lot-list{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.right-side-tab{
+  width: 100%;
+}

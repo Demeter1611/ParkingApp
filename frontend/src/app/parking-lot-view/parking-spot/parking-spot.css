@@ -2,6 +2,9 @@
   width: 40px;
   height: 65px;
   border-radius: 5px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
 }
 
 .parking-spot:hover{
@@ -16,3 +19,9 @@
   background-color: #67564c;
 }
 
+.parking-spot-name{
+  color: white;
+  font-family: var(--font-base);
+  font-size: 12px;
+  margin-top: auto;
+}

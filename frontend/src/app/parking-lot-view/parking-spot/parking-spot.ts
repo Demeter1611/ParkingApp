@@ -6,6 +6,7 @@ import { ParkingSpot } from "../../interfaces/parkingspot";
   template:`
     <div class="parking-spot" [class]="{unoccupied: parkingSpot().status === 'available', occupied: parkingSpot().status !=='available'}"
     (click)="selectMe()">
+    <small class="parking-spot-name">{{parkingSpot().name}}</small>
     </div>
   `,
   styleUrls: ['parking-spot.css']

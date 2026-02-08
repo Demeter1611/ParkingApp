@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from "@angular/core";
 import { ParkingLotViewComponent } from "../parking-lot-view/parking-lot-view";
 import { ParkingLot } from "../interfaces/parkinglot";
+import ManageParkingLotsComponent from "./parking-lot-selector/manage-parking-lots";
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -12,12 +13,12 @@ import { ParkingLot } from "../interfaces/parkinglot";
         <h3 class="navigation-crumbs">Dashboard > Parking Lot View</h3>
       </div>
     </section>
-    <app-parking-lot-view [currentParkingLot]="mockParkingSpot"/>
-    <div class="bottom-spacing"></div>
+    <!-- <app-parking-lot-view [currentParkingLot]="mockParkingSpot"/> -->
+     <app-manage-parking-lots/>
   </section>
   `,
   styleUrls: ['admin-dashboard.css'],
-  imports: [ParkingLotViewComponent]
+  imports: [ParkingLotViewComponent, ManageParkingLotsComponent]
 })
 export class AdminDashboardComponent {
   mockParkingSpot: ParkingLot = {
