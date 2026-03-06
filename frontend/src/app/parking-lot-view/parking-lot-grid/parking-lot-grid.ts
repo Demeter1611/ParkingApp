@@ -39,7 +39,7 @@ import { ParkingSpotComponent } from "../parking-spot/parking-spot";
 })
 export class ParkingLotGridComponent{
   parkingSpots: ParkingSpot[] = [];
-  currentParkingLot = input.required<ParkingLot>();
+  parkingLotId = input.required<number>();
   parkingSpotSelected = output<ParkingSpot>();
   displayDate: Date = new Date();
   parkingLotService = inject(ParkingLotService);
@@ -53,9 +53,7 @@ export class ParkingLotGridComponent{
   }
 
   async loadParkingLot(){
-    const parkingLotId = this.currentParkingLot().id;
     this.displayDate.setHours(0, 0, 0, 0);
-    console.log(this.displayDate);
-    this.parkingSpots = await this.parkingLotService.getSpotsWithStatus(parkingLotId, this.displayDate);
+    this.parkingSpots = await this.parkingLotService.getSpotsWithStatus(this.parkingLotId(), this.displayDate);
   }
 }

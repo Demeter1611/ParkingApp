@@ -1,0 +1,34 @@
+.topbar{
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+}
+
+.with-bg{
+  background-color: #0f1920;;
+}
+
+.navigation{
+  display: flex;
+  flex-direction: column;
+}
+
+.title{
+  color: white;
+  font-weight: bolder;
+  font-size: 2.5rem;
+  margin: 0px;
+}
+
+.navigation-crumbs{
+  display: flex;
+  flex-direction: row;
+  margin: 0px;
+  margin-left: 15px;
+}
+
+.crumb{
+  color: rgb(211, 211, 211);
+  font-size: 1rem;
+  margin: 0px 0px 0px 10px;
+}

@@ -6,6 +6,8 @@ const router = new Router({
 const userAPI = require('../resources/user');
 const jwt = require('../../jwt/helpFunctions');
 const { verifyLogin } = require('../middlewares/auth-middleware');
+const invitationTokenAPI = require('../resources/invitation-token');
+const parkingLotAPI = require('../resources/parking-lot');
 
 function isEmailValid(email){
     splittedEmail = email.split('@');
@@ -40,12 +42,29 @@ function isRoleValid(role){
 }
 
 router.post('/login', async (ctx, next) => {
-    const { email, password } = ctx.request.body;
+    const { email, password, inviteToken } = ctx.request.body;
     const userSearchResponse = await userAPI.search(email, password);
-    const newUser = userSearchResponse[0];
+    
     if(userSearchResponse.length == 0) {
         throw {status: 401, message: { error: 'Invalid user!' }};
     }
+    
+    const newUser = userSearchResponse[0];
+
+    if(inviteToken){
+        try{
+            const invitationData = await invitationTokenAPI.validateToken(inviteToken);
+            if(invitationData.email !== email){
+                console.error("Email mismatch");
+            } else {
+                await parkingLotAPI.addUserParkingAccess(invitationData.parkingLotId, newUser.id);
+                await invitationTokenAPI.update({id: invitationData.id, used: true});
+            }
+        } catch(err){
+            console.error('Invitation failed: ', err);
+        }
+    }
+
     ctx.set("Access-Control-Expose-Headers", "Authorization");
     ctx.set("Authorization", jwt.createToken(newUser.id));
     ctx.response.body = {
@@ -58,7 +77,7 @@ router.post('/login', async (ctx, next) => {
 })
 
 router.post('/register', async (ctx, next) => {
-    const { password, email, username, carplate, role } = ctx.request.body;
+    const { password, email, username, carplate, role, inviteToken } = ctx.request.body;
 
     if(!isEmailValid(email)){
         throw {status: 400, message: { error: 'Invalid email!' }};
@@ -86,6 +105,23 @@ router.post('/register', async (ctx, next) => {
     }
 
     const newUser = userAddResponse[0];
+
+    if(inviteToken){
+        try{
+            const invitationData = await invitationTokenAPI.validateToken(inviteToken);
+            if(invitationData.email !== email){
+                console.error("Email mismatch");
+            } else {
+                await parkingLotAPI.addUserParkingAccess(invitationData.parkingLotId, newUser.id);
+                await invitationTokenAPI.update({id: invitationData.id, used: true});
+            }
+        } catch(err){
+            console.error('Invitation failed: ', err);
+        }
+    }
+
+    ctx.set("Access-Control-Expose-Headers", "Authorization");
+    ctx.set("Authorization", jwt.createToken(newUser.id));
     ctx.response.status = 200;
     ctx.response.body = {
         id: newUser.id, resourceType: 'User', email: email, username: username, role: {

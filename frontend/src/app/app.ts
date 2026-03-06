@@ -1,13 +1,15 @@
 import { AuthenticationService } from './services/authentication-service';
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
+import { Topbar } from "./topbar/topbar";
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, RouterLink, Topbar],
   template:`
     <div class="container">
+      <app-topbar/>
       <!-- <section class="top-bar">
         <a href="/">
           <img class="logo" src="assets/parking-lot.png" >

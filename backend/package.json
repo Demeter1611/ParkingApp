@@ -16,7 +16,8 @@
     "jsonwebtoken": "^9.0.2",
     "koa": "^3.0.1",
     "koa-router": "^14.0.0",
-    "mssql": "^11.0.1"
+    "mssql": "^11.0.1",
+    "nodemailer": "^8.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

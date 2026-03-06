@@ -4,6 +4,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { forbiddenPasswordValidator, matchingPasswordsValidator } from './validators';
 import { AuthenticationService } from '../services/authentication-service';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { InvitationService } from '../services/invitation-service';
+import { InvitationData } from '../interfaces/invitationdata';
+import { ParkingLotService } from '../services/parking-lot-service';
+import { TopbarService } from '../services/topbar-service';
 
 @Component({
   selector: 'app-authentication',
@@ -11,11 +16,10 @@ import { AuthenticationService } from '../services/authentication-service';
   template: `
   <main class="hidden-scroll">
     <section class="auth-container">
-      <div class="form-type-selectors">
-        <button class="primary-button tab" [ngClass]="{'active': selectedForm === 'Login'}" (click)="tabSwitch('Login')">Login</button>
-        <button class="primary-button tab" [ngClass]="{'active': selectedForm === 'Register'}" (click)="tabSwitch('Register')">Register</button>
-      </div>
       @if(selectedForm === "Login") {
+        <h1 class="auth-header">
+          Login
+        </h1>
         <form [formGroup]="login">
           <div class="form-field">
             <label for="login-email">Email:</label>
@@ -34,9 +38,7 @@ import { AuthenticationService } from '../services/authentication-service';
             <input id="login-password" type="password" formControlName="password">
             @if(loginPassword?.touched && loginPassword?.invalid){
               <div class="error">
-                <small *ngIf="reviewForm.invalid && reviewForm.touched">
-                  All fields required!
-                </small>
+                <small>*Invalid password!</small>
               </div>
             }
           </div>
@@ -45,6 +47,9 @@ import { AuthenticationService } from '../services/authentication-service';
         </form>
       }
       @else {
+        <h1 class="auth-header">
+          {{this.mode == PARTNER_MODE ? "Become a partner" : "Join as an employee"}}
+        </h1>
         <form [formGroup]="register">
           <div class="form-field">
             <label for="register-username">Username:</label>
@@ -104,13 +109,6 @@ import { AuthenticationService } from '../services/authentication-service';
               </div>
             }
           </div>
-          <div class="form-field">
-            <label>Role:</label>
-            <select formControlName="role">
-              <option value="user">User</option>
-              <option value="parking">Parking</option>
-            </select>
-          </div>
           @if(registerRole?.touched && registerRole?.invalid){
             <div class="error">
               @if(registerRole?.hasError('required')){
@@ -128,8 +126,19 @@ import { AuthenticationService } from '../services/authentication-service';
 })
 export class AuthenticationComponent {
   authenticationService = inject(AuthenticationService);
+  invitationService = inject(InvitationService);
+  parkingLotService = inject(ParkingLotService);
+  topbarService = inject(TopbarService);
+  private route = inject(ActivatedRoute);
+
+  readonly EMPLOYEE_MODE = "employee";
+  readonly PARTNER_MODE = "partner";
+
+  mode: string | null = "";
+  inviteToken: string | null = "";
 
   private router = inject(Router);
+  invitationData: InvitationData | undefined;
 
   selectedForm = "Login";
   login!: FormGroup;
@@ -140,7 +149,13 @@ export class AuthenticationComponent {
     this.selectedForm = tab;
   }
 
-  ngOnInit(){
+  async ngOnInit(){
+    this.topbarService.updateTopbar({showTopbar: false})
+    const params = this.route.snapshot.queryParamMap;
+    this.mode = params.get('mode');
+    this.inviteToken = params.get('invite-token');
+    console.log(this.mode, this.inviteToken);
+
     this.login = new FormGroup(
       {
         email: new FormControl('', [
@@ -177,6 +192,39 @@ export class AuthenticationComponent {
         validators: matchingPasswordsValidator
       }
     );
+
+    if(this.mode == this.EMPLOYEE_MODE && this.inviteToken){
+      this.invitationData = await this.invitationService.validateInvite(this.inviteToken);
+      if(!this.invitationData){
+        return;
+      }
+      if(!this.invitationData.isRegistered){
+        this.register.patchValue({
+          email: this.invitationData.email,
+          role: 'user'
+        });
+
+        this.registerEmail?.disable();
+        this.selectedForm = "Register";
+      }
+      else{
+        this.login.patchValue({
+          email: this.invitationData.email
+        });
+
+        this.loginEmail?.disable();
+        this.selectedForm = "Login";
+      }
+    }
+    else if(this.mode == this.PARTNER_MODE){
+      this.selectedForm = "Register";
+      this.register.patchValue({
+        role: 'parking'
+      });
+    }
+    else{
+      this.selectedForm = "Login";
+    }
   }
 
   async onLoginSubmit(){
@@ -186,10 +234,11 @@ export class AuthenticationComponent {
       return;
     }
 
-    const { email, password } = this.login.value;
+    const { email, password } = this.login.getRawValue();
     const response = await this.authenticationService.submitLoginRequest({
       email: email,
-      password: password
+      password: password,
+      inviteToken: this.inviteToken
     })
 
     if(!response.error){
@@ -205,19 +254,18 @@ export class AuthenticationComponent {
       return;
     }
 
-    const {username, email, password, role} = this.register.value;
+    const {username, email, password, role} = this.register.getRawValue();
 
     const response = await this.authenticationService.submitRegisterRequest({
       username: username,
       email: email,
       password: password,
-      role: role
+      role: role,
+      inviteToken: this.inviteToken
     })
 
     if(!response.error){
-      this.tabSwitch('Login');
-      this.loginEmail?.patchValue(email);
-      return;
+      this.router.navigate(['/']);
     }
   }
 

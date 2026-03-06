@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { TopbarService } from './../services/topbar-service';
+import { Component, inject } from '@angular/core';
 import { FeatureDisplayComponent } from "../feature-display/feature-display";
 
 @Component({
@@ -14,5 +15,8 @@ import { FeatureDisplayComponent } from "../feature-display/feature-display";
   styleUrl: './home.css'
 })
 export class HomeComponent {
-
+  topbarService = inject(TopbarService);
+  ngOnInit(){
+    this.topbarService.updateTopbar({showTopbar: true, title: ' Parking app', transparentBackground: true});
+  }
 }
