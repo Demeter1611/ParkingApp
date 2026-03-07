@@ -118,4 +118,23 @@ export class ParkingSpotService {
       console.error(err);
     }
   }
+
+  async getMine(targetDate: Date){
+    const dateStr = targetDate.toISOString().split('T')[0];
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken){
+        const response = await fetch(`${this.url}/mine?targetDate=${dateStr}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application-json',
+            'Authorization': authToken
+          }
+        });
+        return await response.json();
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
 }

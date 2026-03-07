@@ -1,0 +1,10 @@
+.user-dashboard{
+  background-color: #0f1920;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+  font-family: var(--font-base);
+  padding: 10px;
+}
+

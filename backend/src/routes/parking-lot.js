@@ -55,13 +55,6 @@ router.post('/', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next)
     }
 })
 
-router.get('/:id', async(ctx, next) => {
-    const userId = ctx.params.id;
-    const parkingLots = await parkingLotAPI.getByUserId(userId);
-    ctx.response.status = 200;
-    ctx.response.body = parkingLots;
-})
-
 router.patch('/:id', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next) => {
     const parkingLotId = ctx.params.id;
 
@@ -146,6 +139,21 @@ router.get('/:id/users-with-access', async(ctx, next) => {
 
     ctx.response.status = 200;
     ctx.response.body = users;
+})
+
+router.get('/accessible', verifyLogin, roleChecker([ROLE_LIST.user]), async(ctx, next) => {
+    const userId = ctx.user.id;
+    const accesibleParkingLots = await parkingLotAPI.getAccessibleParkingLots(userId);
+
+    ctx.response.status = 200;
+    ctx.response.body = accesibleParkingLots;
+})
+
+router.get('/:id', async(ctx, next) => {
+    const userId = ctx.params.id;
+    const parkingLots = await parkingLotAPI.getByUserId(userId);
+    ctx.response.status = 200;
+    ctx.response.body = parkingLots;
 })
 
 module.exports = {

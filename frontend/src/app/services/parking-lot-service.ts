@@ -171,4 +171,22 @@ export class ParkingLotService {
       console.error(err);
     }
   }
+
+  async getAccessibleParkingLots(){
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken){
+        const response = await fetch(`${this.url}/accessible`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authToken
+          }
+        });
+
+        return await response.json();
+      }
+    } catch(err){
+      console.error(err);
+    }
+  }
 }

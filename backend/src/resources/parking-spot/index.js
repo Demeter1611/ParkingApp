@@ -47,4 +47,53 @@ module.exports = {
                 `);
         return result.recordset;
     },
+
+    getUserSpotForDate: async (userId, targetDate) => {
+        const reservedSpot = await sqlRequest()
+            .input('userId', userId)
+            .input('targetDate', targetDate)
+            .query(`
+                    SELECT ${PARKING_SPOT_FIELDS}
+                    FROM Reservations r
+                    INNER JOIN ParkingSpots p ON r.spotId = p.id
+                    WHERE r.userId = @userId
+                        AND @targetDate BETWEEN r.startDate AND r.endDate
+                `);
+        if(reservedSpot.recordset[0]){
+            return({...reservedSpot.recordset[0], status: 'reserved'});
+        }
+
+        const allocatedSpot = await sqlRequest()
+            .input('userId', userId)
+            .query(`
+                    SELECT ${PARKING_SPOT_FIELDS}
+                    FROM Allocations a
+                    INNER JOIN ParkingSpots p ON a.spotId = p.id
+                        WHERE a.userId = @userId
+                `)
+        if(allocatedSpot.recordset[0]){
+            const releaseCheck = await sqlRequest()
+                .input('spotId', allocatedSpot.recordset[0].id)
+                .input('targetDate', targetDate)
+                .query(`
+                    SELECT
+                        aw.id as windowId,
+                        r.id as reservationId
+                    FROM ParkingSpots p
+                    LEFT JOIN AvailabilityWindows aw ON aw.spotId = p.id
+                        AND @targetDate BETWEEN aw.startDate AND aw.endDate
+                    LEFT JOIN Reservations r ON r.spotId = p.id
+                        AND @targetDate BETWEEN r.startDate and r.endDate
+                    WHERE p.id = @spotId
+                    `)
+            const released = releaseCheck.recordset[0] && 
+                (releaseCheck.recordset[0].windowId || releaseCheck.recordset[0].reservationId);
+            if(released){
+                return {...allocatedSpot.recordset[0], status: 'released'}
+            }
+            return {...allocatedSpot.recordset[0], status: 'allocated'};
+        }
+
+        return null;
+    }
 }

@@ -87,7 +87,7 @@ module.exports = {
                     SET
                         email = ISNULL(@email, email),
                         username = ISNULL(@username, username),
-                        carplate = ISNULL(@carplate, carplate)
+                        carplate = ISNULL(@carplate, carplate),
                         password = ISNULL(@password, password)
                     WHERE id = @id
                 `);

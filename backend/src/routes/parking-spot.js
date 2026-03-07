@@ -171,6 +171,21 @@ router.delete('/:id/reclaim/:windowid', async(ctx, next) => {
  * ce se intampla daca mai apoi utilizatorul ce a rezervat locul renunta pentru cel ce detine parcarea?
  */
 
+router.get('/mine', verifyLogin, roleChecker([ROLE_LIST.user]), async (ctx, next) => {
+    const userId = ctx.user.id;
+    const { targetDate } = ctx.request.query;
+    if(!targetDate) {
+        throw { status: 400, message: { error: 'Date required' }};
+    };
+    try{
+        const spot = await parkingSpotAPI.getUserSpotForDate(userId, targetDate);
+        ctx.response.status = 200;
+        ctx.response.body = spot;
+    } catch(err) {
+        throw { status: 400, message: { error: 'Request failed' }};
+    }
+})
+
 module.exports = {
     router
 }

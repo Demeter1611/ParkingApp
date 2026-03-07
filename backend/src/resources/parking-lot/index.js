@@ -138,6 +138,19 @@ module.exports = {
         return result.recordset;
     },
 
+    getAccessibleParkingLots: async (userId) => {
+        const result = await sqlRequest()
+            .input('userId', userId)
+            .query(`
+                    SELECT ${PARKING_LOT_FIELDS}
+                    FROM UserParkingAccess upa
+                    INNER JOIN ParkingLots p ON upa.parkingLotId = p.id
+                    WHERE upa.userId = @userId
+                    ORDER BY p.name ASC
+                `);
+        return result.recordset;
+    },
+
     checkAccess: async(parkingLotId, userId) => {
         const result = await sqlRequest()
             .input('parkingLotId', parkingLotId)
