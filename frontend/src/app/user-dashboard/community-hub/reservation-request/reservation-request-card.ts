@@ -2,6 +2,7 @@ import { Component, inject, input } from "@angular/core";
 import { ReservationRequest } from "../../../interfaces/reservationrequest";
 import { DatePipe } from "@angular/common";
 import { ReservationRequestService } from "../../../services/reservation-request-service";
+import { ParkingSpot } from "../../../interfaces/parkingspot";
 
 @Component({
   selector: 'app-reservation-request-card',
@@ -13,11 +14,21 @@ import { ReservationRequestService } from "../../../services/reservation-request
         <span class="user">Username: {{this.currentRequest().username}}</span>
         <span class="date">Date: {{this.currentRequest().requestedDate | date: 'yyyy-MM-dd'}}</span>
       </div>
-      <button>Fulfill request</button>
+      @if(mySpot() && mySpot()?.status !== 'reserved'){
+        <button (click)="onFulfill()">Fulfill request</button>
+      }
     </section>
   `,
   styleUrls: ['reservation-request-card.css']
 }) export class ReservationRequestCard {
   reservationRequestService = inject(ReservationRequestService);
   currentRequest = input.required<ReservationRequest>();
+  mySpot = input<ParkingSpot | null>();
+
+  async onFulfill(){
+    const spot = this.mySpot();
+    if(spot){
+      await this.reservationRequestService.fulfillRequest(this.currentRequest().id, {spotId: spot.id});
+    }
+  }
 }

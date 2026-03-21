@@ -37,3 +37,11 @@
   color: white;
   border: 1px solid white;
 }
+
+.released{
+  color: rgb(108, 108, 108);
+}
+
+.status-display{
+  color: white;
+}

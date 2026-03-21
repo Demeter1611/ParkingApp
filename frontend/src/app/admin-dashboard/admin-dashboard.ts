@@ -16,6 +16,6 @@ import { TopbarService } from "../services/topbar-service";
 export class AdminDashboardComponent {
   topbarService = inject(TopbarService);
   ngOnInit(){
-    this.topbarService.updateTopbar({showTopbar: true, title:"Admin Dashboard", breadcrumbs: ['Dashboard']});
+    this.topbarService.updateTopbar({showTopbar: true, title:"Admin Dashboard"});
   }
 }

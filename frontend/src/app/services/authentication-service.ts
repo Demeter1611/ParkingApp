@@ -53,18 +53,27 @@ export class AuthenticationService {
     return localStorage.getItem(this.TOKEN_LOCAL_STORAGE_KEY) != null && localStorage.getItem(this.USER_DETAILS_LOCAL_STORAGE_KEY) != null;
   }
   get user(){
-    return JSON.parse(localStorage.getItem(this.USER_DETAILS_LOCAL_STORAGE_KEY) ?? '');
+    const userData = localStorage.getItem(this.USER_DETAILS_LOCAL_STORAGE_KEY);
+    if(!userData || userData === undefined){
+      return null;
+    }
+    try{
+      return JSON.parse(userData);
+    } catch(e){
+      console.error('Could not parse userdata', e);
+      return null;
+    }
   }
   get userEmail() {
-    return this.user.email;
+    return this.user?.email;
   }
 
   get userUsername(){
-    return this.user.username;
+    return this.user?.username;
   }
 
   get userRole() {
-    return this.user.role.display;
+    return this.user?.role?.display;
   }
 
   get token() {

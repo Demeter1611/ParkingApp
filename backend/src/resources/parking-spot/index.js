@@ -83,7 +83,7 @@ module.exports = {
                     LEFT JOIN AvailabilityWindows aw ON aw.spotId = p.id
                         AND @targetDate BETWEEN aw.startDate AND aw.endDate
                     LEFT JOIN Reservations r ON r.spotId = p.id
-                        AND @targetDate BETWEEN r.startDate and r.endDate
+                        AND @targetDate BETWEEN r.startDate AND r.endDate
                     WHERE p.id = @spotId
                     `)
             const released = releaseCheck.recordset[0] && 

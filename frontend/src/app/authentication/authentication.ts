@@ -242,7 +242,7 @@ export class AuthenticationComponent {
     })
 
     if(!response.error){
-      this.router.navigate(['/']);
+      window.location.href = '/';
     }
 
   }

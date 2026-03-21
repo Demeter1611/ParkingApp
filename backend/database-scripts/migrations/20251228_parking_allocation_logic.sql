@@ -22,9 +22,9 @@ if OBJECT_ID('Reservations') IS NULL
 BEGIN
     CREATE TABLE Reservations(
         id INT PRIMARY KEY IDENTITY(1,1),
-        startDate DATE,
-        endDate DATE,
+        startDate Date,
+        endDate Date,
         spotId INT FOREIGN KEY REFERENCES ParkingSpots(id) ON DELETE CASCADE,
-        userId INT FOREIGN KEY REFERENCES Users(id),
+        userId INT FOREIGN KEY REFERENCES Users(id)
     )
 END

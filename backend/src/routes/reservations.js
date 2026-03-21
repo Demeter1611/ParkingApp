@@ -33,7 +33,7 @@ router.delete('/:id', verifyLogin, async(ctx, next) => {
     const reservationId = ctx.params.id;
 
     try{
-        const deleteResult = await reservationAPI.deleteReservation(spotId);
+        const deleteResult = await reservationAPI.deleteReservation(reservationId);
         if(!deleteResult) {
             throw { status: 404, message: { error: 'Reservation not found' }};
         };

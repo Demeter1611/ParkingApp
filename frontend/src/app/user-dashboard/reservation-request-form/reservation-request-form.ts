@@ -11,11 +11,11 @@ import { ReservationRequestService } from "../../services/reservation-request-se
       <button class="close-modal-button" (click)="closeModal()">X</button>
       <form [formGroup]="reservationRequestForm">
         <div class="form-field">
-          <label for="reason">Reason:</label>
+          <label for="reason">Reason</label>
           <input class="text-input" id="reason" type="reason" formControlName="reason"/>
         </div>
         <div class="form-field">
-          <label for="date">Date:</label>
+          <label for="date">Date</label>
           <input id="date" type="date" formControlName="requestedDate"/>
         </div>
         <button (click)='onSubmit()'>Make request</button>

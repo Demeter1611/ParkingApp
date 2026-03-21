@@ -1,4 +1,5 @@
 const { sqlRequest } = require('../../db.js');
+const sql = require('mssql');
 
 const RESERVATION_FIELDS = `
     r.id,
@@ -47,17 +48,17 @@ module.exports = {
 
     addReservation: async (spotId, userId, startDate, endDate) => {
         const result = await sqlRequest()
-            .input('startDate', startDate)
-            .input('endDate', endDate)
-            .input('spotId', spotId)
-            .input('userId', userId)
-            .query(`
-                    INSERT INTO Reservations(startDate, endDate, spotId, userId)
-                    VALUES(@startDate, @endDate, @spotId, @userId)
+        .input('spotId', spotId)
+        .input('userId', userId)
+        .input('startDate', startDate)
+        .input('endDate', endDate)
+        .query(`
+                    INSERT INTO Reservations(spotId, userId, startDate, endDate)
+                    VALUES(@spotId, @userId, @startDate, @endDate);
                     SELECT SCOPE_IDENTITY() AS ReservationId
                 `)
-            const reservationId = result.recordset[0].ReservationId;
-            return reservationId;
+        const reservationId = result.recordset[0].ReservationId;
+        return reservationId;
     },
 
     checkAvailability: async(spotId, startDate, endDate) => {

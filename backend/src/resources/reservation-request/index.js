@@ -3,6 +3,7 @@ const sql = require('mssql');
 
 const RESERVATION_REQUEST_FIELDS = `
     req.id,
+    req.userId,
     req.parkingLotId,
     req.reason,
     req.requestedDate,
@@ -11,6 +12,7 @@ const RESERVATION_REQUEST_FIELDS = `
 
 module.exports = {
     add: async(userId, parkingLotId, reason, requestedDate, dateOfRequest) => {
+        console.log(requestedDate, dateOfRequest);
         const result = await sqlRequest()
             .input('userId', userId)
             .input('parkingLotId', parkingLotId)
@@ -53,13 +55,11 @@ module.exports = {
         const result = await sqlRequest()
             .input('id', newInfo.id)
             .input('reason', newInfo.reason)
-            .input('requestedDate', newInfo.requestedDate)
             .input('status', newInfo.status)
             .query(`
                     UPDATE ReservationRequests
                     SET
                         reason = ISNULL(@reason, reason),
-                        requestedDate = ISNULL(@requestedDate, requestedDate),
                         statusId = ISNULL(
                         (SELECT id FROM RequestStatuses WHERE statusName = @status),
                         statusId
@@ -69,8 +69,7 @@ module.exports = {
         if(result.rowsAffected[0] === 0){
             return null;
         }
-        
-        return this.getById(newInfo.id);
+        return true;
     },
 
     search: async(searchQuery) => {

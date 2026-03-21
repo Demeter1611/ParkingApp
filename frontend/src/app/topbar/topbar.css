@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: row;
   padding: 10px;
+  justify-content: space-between;
 }
 
 .with-bg{
@@ -20,15 +21,35 @@
   margin: 0px;
 }
 
-.navigation-crumbs{
+.user-actions{
+  color: white;
   display: flex;
   flex-direction: row;
-  margin: 0px;
-  margin-left: 15px;
+  align-items: center;
+  gap: 20px;
 }
 
-.crumb{
-  color: rgb(211, 211, 211);
-  font-size: 1rem;
-  margin: 0px 0px 0px 10px;
+
+.icon{
+  color: white;
+  padding: 5px;
+  border-radius: 25px;
+}
+
+
+.topbar-button{
+  background-color: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: white;
+  gap: 10px;
+  padding: 5px 10px 5px 10px;
+  border-radius: 25px;
+  border: 0px;
+}
+
+.icon:hover, .topbar-button:hover{
+  cursor: pointer;
+  background-color: rgb(96, 96, 96);
 }

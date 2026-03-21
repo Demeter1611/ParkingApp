@@ -45,7 +45,9 @@ router.post('/:id/fulfill', verifyLogin, roleChecker([ROLE_LIST.user]), async(ct
 
         const { userId, requestedDate } = reservationRequest;
 
-        const reservation = await reservationAPI.addReservation(spotId, userId, requestedDate, requestedDate);
+        const reservationDate = new Date(requestedDate).toISOString().split('T')[0];
+
+        const reservation = await reservationAPI.addReservation(spotId, userId, reservationDate, reservationDate);
         
         await reservationRequestAPI.update({id: reservationRequestId, status: 'fulfilled'});
         ctx.response.status = 201;

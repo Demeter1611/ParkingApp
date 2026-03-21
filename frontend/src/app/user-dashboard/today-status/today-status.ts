@@ -7,13 +7,14 @@ import { Component, input, output } from "@angular/core";
     <div class="today-card">
       @if(parkingSpot()){
         <h1 class="today-card-text">Today's parking spot</h1>
-        <h2 class="parking-spot-number">{{parkingSpot()?.name}}</h2>
+        <small class="status-display">{{parkingSpot()?.status?.toUpperCase()}}</small>
+        <h2 class="parking-spot-number" [class.released]="parkingSpot()?.status === 'released'">{{parkingSpot()?.name}}</h2>
         <div class="action-buttons">
           <button class="today-card-button">View on Google Maps</button>
           @if(parkingSpot()?.status === 'allocated'){
-            <button class="today-card-button">Free up spot</button>
+            <button class="today-card-button" (click)="openFreeUpSpot.emit(true)">Free up spot</button>
           }
-          @else{
+          @else if(parkingSpot()?.status !== 'released'){
             <button class="today-card-button" (click)="openMakeRequest.emit(true)">Make future request</button>
           }
         </div>
@@ -32,4 +33,5 @@ import { Component, input, output } from "@angular/core";
   parkingSpot = input.required<ParkingSpot | null>();
   openMakeRequest = output<boolean>();
   openAvailableSpots = output<boolean>();
+  openFreeUpSpot = output<boolean>();
 }
