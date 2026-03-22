@@ -89,7 +89,7 @@ export class ParkingSpotService {
         const response = await fetch(`${this.url}/${parkingSpotId}/release`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application-json',
+            'Content-Type': 'application/json',
             'Authorization': authToken
           },
           body: JSON.stringify(data)

@@ -31,15 +31,16 @@ module.exports = {
         return allocationId;
     },
 
-    addAvailabilityWindow: async (spotId, startDate, endDate) => {
+    addAvailabilityWindow: async (spotId, userId, startDate, endDate) => {
         //sterge userId poate?
         const result = await sqlRequest()
             .input('startDate', startDate)
             .input('endDate', endDate)
             .input('spotId', spotId)
+            .input('userId', userId)
             .query(`
-                    INSERT INTO AvailabilityWindows(startDate, endDate, spotId)
-                    VALUES(@startDate, @endDate, @spotId)
+                    INSERT INTO AvailabilityWindows(startDate, endDate, spotId, userId)
+                    VALUES(@startDate, @endDate, @spotId, @userId)
                     SELECT SCOPE_IDENTITY() AS AvailabilityWindowId
                 `);
         const availabilityWindowId = result.recordset[0].AvailabilityWindowId;

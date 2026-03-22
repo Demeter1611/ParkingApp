@@ -2,13 +2,14 @@ import { Component, inject, input, output } from "@angular/core";
 import { ParkingLot } from "../../interfaces/parkinglot";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ReservationRequestService } from "../../services/reservation-request-service";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-reservation-request-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatIcon],
   template:`
     <section class='reservation-request-form modal'>
-      <button class="close-modal-button" (click)="closeModal()">X</button>
+      <button class="close-modal-button" (click)="closeModal()"><mat-icon>close</mat-icon></button>
       <form [formGroup]="reservationRequestForm">
         <div class="form-field">
           <label for="reason">Reason</label>

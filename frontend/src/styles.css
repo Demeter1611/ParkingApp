@@ -94,46 +94,7 @@ button:hover {
   user-select: none;
 }
 
-/* --- Material Calendar Custom Styling --- */
-
-/* 1. The main container of the popup */
-.mat-datepicker-content {
-  background-color: var(--secondary-color) !important; /* Your #0D1F2D Navy */
-  color: white !important;
-  border: 1px solid var(--accent-color);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
-}
-
-/* 2. Header text, Month/Year toggle, and Navigation Arrows */
-.mat-calendar-period-button,
-.mat-calendar-next-button,
-.mat-calendar-previous-button,
-.mat-calendar-body-cell-content {
-  color: white !important;
-}
-
-/* 3. The "S M T W T F S" day headers */
-.mat-calendar-table-header th {
-  color: var(--grey-font-color) !important;
-}
-
-/* 4. The currently selected date */
-.mat-calendar-body-selected {
-  background-color: var(--primary-color) !important; /* Your #FA7921 Orange */
-  color: white !important;
-}
-
-/* 5. The range highlight (the bridge between two dates) */
-.mat-calendar-body-in-range::before {
-  background: rgba(250, 121, 33, 0.2) !important; /* Semi-transparent Primary Orange */
-}
-
-/* 6. Today's date indicator (the circle outline) */
-.mat-calendar-body-today:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-  border-color: var(--primary-color) !important;
-}
-
-/* 7. Hover effect on any day */
-.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
-  background-color: rgba(234, 242, 239, 0.1) !important; /* Neutral color with low opacity */
+::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(1);
 }

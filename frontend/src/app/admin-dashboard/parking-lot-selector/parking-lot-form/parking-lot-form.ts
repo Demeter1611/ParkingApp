@@ -2,13 +2,14 @@ import { Component, inject, input, output } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ParkingLotService } from "../../../services/parking-lot-service";
 import { ParkingLot } from "../../../interfaces/parkinglot";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-parking-lot-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatIcon],
   template:`
     <section class="parking-lot-form modal">
-      <button class="close-modal-button" (click)="closeModal()">X</button>
+      <button class="close-modal-button" (click)="closeModal()"><mat-icon>close</mat-icon></button>
       <form [formGroup]="parkingLotForm">
         <div class="form-field">
           <label for="name">Name:</label>

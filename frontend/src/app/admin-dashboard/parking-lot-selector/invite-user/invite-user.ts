@@ -5,12 +5,13 @@ import { ParkingLot } from "../../../interfaces/parkinglot";
 import { InvitationData } from "../../../interfaces/invitationdata";
 import { User } from "../../../interfaces/user";
 import { ParkingLotService } from "../../../services/parking-lot-service";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-invite-user',
   template:`
     <section class="invite-user modal">
-      <button class="close-modal-button" (click)="closeModal()">X</button>
+      <button class="close-modal-button" (click)="closeModal()"><mat-icon>close</mat-icon></button>
       <div class="invitation">
         <label for="email">Email</label>
         <input id="email" type="email" [formControl]="email">
@@ -42,7 +43,7 @@ import { ParkingLotService } from "../../../services/parking-lot-service";
       </div>
     </section>
   `,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatIcon],
   styleUrls: ['invite-user.css']
 })
 export default class InviteUserComponent{

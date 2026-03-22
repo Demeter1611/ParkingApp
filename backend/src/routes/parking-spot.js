@@ -115,14 +115,16 @@ router.post('/:id/release', verifyLogin, async(ctx, next) => {
     //acopera cazul in care datele se suprapun, windowul ar trebui sa se extinda in cazul acesta
     //windowul trebuie sa fie neaparat in viitor
     const spotId = ctx.params.id;
+    const userId = ctx.user.id;
     
     const { startDate, endDate } = ctx.request.body;
     if(!startDate || !endDate) {
         throw { status: 400, message: { error: 'All fields are required' } };
     }
 
+
     try{
-        const availabilityWindowId = reservationAPI.addAvailabilityWindow(spotId, startDate, endDate);
+        const availabilityWindowId = await reservationAPI.addAvailabilityWindow(spotId, userId, startDate, endDate);
 
         ctx.response.status = 200;
         ctx.response.body = {
