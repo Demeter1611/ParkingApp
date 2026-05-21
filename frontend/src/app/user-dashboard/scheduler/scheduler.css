@@ -45,6 +45,12 @@
   gap: 10px;
 }
 
+.day-number.is-past {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .day-info-circle{
   width: 5px;
   height: 5px;

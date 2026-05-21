@@ -29,6 +29,7 @@ interface CalendarDay{
         @for(cell of calendarCells; track $index){
           <div class="day-number"
           [class.invisible]="cell.dayNumber === null"
+          [class.is-past]="isPastDate(cell.dayNumber)"
           [class.is-today]="isToday(cell.dayNumber)"
           [class.selected]="isInRange(cell.dayNumber)"
           [class.invalid-selection]="cell.dayInfo?.status !== initialSelectionStatus && selectionStart"
@@ -142,7 +143,6 @@ interface CalendarDay{
         }
       }
     })
-    console.log(map);
     return map;
   }
 
@@ -158,6 +158,19 @@ interface CalendarDay{
     this.currentMonth = today.getMonth();
     this.currentYear = today.getFullYear();
     this.generateCalendar(this.currentYear, this.currentMonth);
+  }
+
+  isPastDate(day: number | null): boolean {
+    if (day === null){
+      return false;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const cellDate = new Date(this.currentYear, this.currentMonth, day);
+
+    return cellDate < today;
   }
 
   isToday(day: number | null){
@@ -188,7 +201,7 @@ interface CalendarDay{
   }
 
   startSelection(event: MouseEvent, cell: CalendarDay | null){
-    if (event.button !== 0 || !cell){
+    if (event.button !== 0 || !cell || this.isPastDate(cell.dayNumber)){
       return;
     }
     this.isDragging = true;
@@ -198,7 +211,7 @@ interface CalendarDay{
   }
 
   updateSelection(day: number | null){
-    if(this.isDragging && day){
+    if(this.isDragging && day && !this.isPastDate(day)){
       this.selectionEnd = day;
     }
   }
