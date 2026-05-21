@@ -48,7 +48,7 @@ module.exports = {
     },
 
     addReservation: async (spotId, userId, startDate, endDate) => {
-        const result = await sqlRequest()
+        const addReservationResult = await sqlRequest()
         .input('spotId', spotId)
         .input('userId', userId)
         .input('startDate', startDate)
@@ -58,7 +58,20 @@ module.exports = {
                     VALUES(@spotId, @userId, @startDate, @endDate);
                     SELECT SCOPE_IDENTITY() AS ReservationId
                 `)
-        const reservationId = result.recordset[0].ReservationId;
+        const reservationId = addReservationResult.recordset[0].ReservationId;
+
+        await sqlRequest()
+            .input('spotId', spotId)
+            .input('startDate', startDate)
+            .input('endDate', endDate)
+            .query(`
+                    DECLARE @OwnerId INT;
+                    SELECT @OwnerId = userId FROM Allocations WHERE spotId = @spotId;
+
+                    INSERT INTO AvailabilityWindows(startDate, endDate, spotId, userId)
+                    VALUES(@startDate, @endDate, @spotId, @OwnerId)
+            `);
+
         return reservationId;
     },
 
@@ -229,5 +242,20 @@ module.exports = {
                         FROM AvailabilityWindows aw WHERE id = @id
                     `);
             return selectResult.recordset[0];
+    },
+
+    getOverlappingAvailabilityWindows: async(spotId, startDate, endDate) => {
+        const result = await sqlRequest()
+            .input('spotId', spotId)
+            .input('startDate', startDate)
+            .input('endDate', endDate)
+            .query(`
+                    SELECT ${AVAILABILITYWINDOW_FIELDS}
+                    FROM AvailabilityWindows aw
+                    WHERE aw.spotId = @spotId
+                        AND aw.startDate <= @endDate
+                        AND aw.endDate >= @startDate
+                `)
+        return result.recordset;
     }
 }

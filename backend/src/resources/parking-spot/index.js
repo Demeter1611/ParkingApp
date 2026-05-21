@@ -95,5 +95,55 @@ module.exports = {
         }
 
         return null;
+    },
+
+    getMonthData: async (userId, startOfMonth, endOfMonth) => {
+        const allocation = await sqlRequest()
+            .input('userId', userId)
+            .query(`
+                    SELECT spotId, 'allocated' as status
+                    FROM Allocations a
+                    WHERE userId=@userId
+                `);
+        if(!allocation.recordset[0]){
+            const reservations = await sqlRequest()
+                .input('userId', userId)
+                .input('startOfMonth', startOfMonth)
+                .input('endOfMonth', endOfMonth)
+                .query(`
+                    SELECT r.spotId, r.startDate, r.endDate, 'reserved' as status
+                    FROM Reservations r
+                    WHERE userId=@userId
+                    AND (r.startDate <= @endOfMonth AND r.endDate >= @startOfMonth)
+                `);
+            return reservations.recordset;
+        }
+
+        const spotId = allocation.recordset[0].spotId;
+
+        
+        const released = await sqlRequest()
+        .input('userId', userId)
+        .input('startOfMonth', startOfMonth)
+        .input('endOfMonth', endOfMonth)
+        .query(`
+            SELECT aw.spotId, aw.startDate, aw.endDate, 'released' as status
+            FROM AvailabilityWindows aw
+            WHERE userId=@userId
+            AND (aw.startDate <= @endOfMonth AND aw.endDate >= @startOfMonth)
+            `);
+
+        const occupiedByOthers = await sqlRequest()
+                .input('spotId', spotId)
+                .input('startOfMonth', startOfMonth)
+                .input('endOfMonth', endOfMonth)
+                .query(`
+                        SELECT r.spotId, r.startDate, r.endDate, 'occupied' as status
+                        FROM Reservations r
+                        WHERE r.spotId = @spotId
+                        AND (r.startDate <= @endOfMonth AND r.endDate >= @startOfMonth)
+                    `);
+
+        return [...released.recordset, allocation.recordset[0], ...occupiedByOthers.recordset];
     }
 }

@@ -12,7 +12,7 @@ import { TopbarService } from '../services/topbar-service';
 
 @Component({
   selector: 'app-authentication',
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule],
   template: `
   <main class="hidden-scroll">
     <section class="auth-container">

@@ -137,41 +137,51 @@ router.post('/:id/release', verifyLogin, async(ctx, next) => {
     }
 });
 
-router.delete('/:id/reclaim/:windowid', async(ctx, next) => {
+router.post('/:id/reclaim', verifyLogin, async(ctx, next) => {
+    const ownerId = ctx.user.id;
     const spotId = ctx.params.id;
-    const windowId = ctx.params.windowid;
-    
-    const availabilityWindow = await reservationAPI.getAvailabilityWindowById(windowId);
-    const { startDate, endDate, userId } = availabilityWindow;
-    console.log(startDate, 'enddate: ', endDate);
-    
+    const { startDate, endDate } = ctx.request.body;
+
+    if(!startDate || !endDate) {
+        throw { status: 400, message: { error: 'startDate and endDate required'}};
+    }
+
     try{
-        const deleteResult = await reservationAPI.deleteAvailabilityWindow(windowId);
-        
+        const overlappingWindows = await reservationAPI.getOverlappingAvailabilityWindows(spotId, startDate, endDate);
+
         const conflictingReservations = await reservationAPI.getReservationByDate(spotId, startDate, endDate);
-        console.log(conflictingReservations);
 
-        await Promise.all(conflictingReservations.map(res => {
-            reservationAPI.addAvailabilityWindow(spotId, res.startDate, res.endDate)
-        }));
+        const reclaimStart = new Date(startDate);
+        const reclaimEnd = new Date(endDate);
 
+        for(const availabilityWindow of overlappingWindows) {
+            await reservationAPI.deleteAvailabilityWindow(availabilityWindow.id);
+            const windowStart = new Date(availabilityWindow.startDate);
+            const windowEnd = new Date(availabilityWindow.endDate);
+
+            if(windowStart < reclaimStart){
+                const beforeEnd = new Date(reclaimStart);
+                beforeEnd.setDate(beforeEnd.getDate() - 1);
+
+                await reservationAPI.addAvailabilityWindow(spotId, ownerId, windowStart.toISOString().split('T')[0], beforeEnd.toISOString().split('T')[0]);
+            };
+            if(windowEnd > reclaimEnd) {
+                const afterStart = new Date(reclaimEnd);
+                afterStart.setDate(afterStart.getDate() + 1);
+
+                await reservationAPI.addAvailabilityWindow(spotId, ownerId, afterStart.toISOString().split('T')[0], windowEnd.toISOString().split('T')[0]);
+            };
+        }
+        for(const reservation of conflictingReservations) {
+            await reservationAPI.addAvailabilityWindow(spotId, ownerId, reservation.startDate, reservation.endDate);
+        }
         ctx.response.status = 200;
-        ctx.response.body = {message: 'Availability window successfully deleted'};
-    } catch(err){
+        ctx.response.body = { message: 'Spot successfully reclaimed'};
+    } catch(err) {
+        console.error(err);
         throw { status: 400, message: { error: 'Request failed' }};
     }
-    
 })
-/**
- * functie de reclaim
- * --------se sterg toate rezervarile?  !nu e bine
- * --------se termina availabilityWindow la ultima rezervare din window? !tot nu
- * --------utilizatorul poate crea mai multe window-uri
- * --------ce se intapmla daca locul e rezervat in prima zi a windowului si in ultima si owner-ul vrea sa isi reia locul,
- * --------cea mai buna solutie: stergi windowul initial si creezi fragmente care sa acopere doar datele in care locul e rezervat
- * merge la windowurile ce is unu dupa altu
- * ce se intampla daca mai apoi utilizatorul ce a rezervat locul renunta pentru cel ce detine parcarea?
- */
 
 router.get('/mine', verifyLogin, roleChecker([ROLE_LIST.user]), async (ctx, next) => {
     const userId = ctx.user.id;
@@ -185,6 +195,21 @@ router.get('/mine', verifyLogin, roleChecker([ROLE_LIST.user]), async (ctx, next
         ctx.response.body = spot;
     } catch(err) {
         throw { status: 400, message: { error: 'Request failed' }};
+    }
+})
+
+router.get('/month-data', verifyLogin, roleChecker([ROLE_LIST.user]), async(ctx, next) => {
+    const userId = ctx.user.id;
+    const {startOfMonth, endOfMonth} = ctx.request.query;
+    if(!startOfMonth || !endOfMonth){
+        throw { status: 400, message: { error: 'Date required' }};
+    };
+    try{
+        const data = await parkingSpotAPI.getMonthData(userId, startOfMonth, endOfMonth);
+        ctx.response.status = 200;
+        ctx.response.body = data; 
+    } catch(err){
+        throw { status: 400, message: { error: err }};
     }
 })
 

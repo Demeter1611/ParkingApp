@@ -8,3 +8,22 @@
   padding: 10px;
 }
 
+.left-card{
+  background-color: var(--secondary-color);
+  height: 80vh;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.calendar-icon{
+  color: white;
+  padding: 5px;
+  border-radius: 25px;
+}
+
+.calendar-icon:hover{
+  cursor: pointer;
+  background-color: var(--accent-color);
+}
+
+

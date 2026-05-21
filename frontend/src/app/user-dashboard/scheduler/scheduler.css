@@ -1,0 +1,132 @@
+.scheduler{
+  padding: 25px;
+  border-radius: 25px;
+  align-items: center;
+}
+
+.calendar-header{
+  color: white;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-grid{
+  color: white;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  text-align: center;
+  padding: 5px;
+}
+
+.calendar-header-text{
+  text-align: center;
+  width: 50px;
+}
+
+.month-selector{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  color: white;
+  border-bottom: 1px solid white;
+}
+
+.day-number{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+  border-radius: 50px;
+  background-color: #162e40;
+  gap: 10px;
+}
+
+.day-info-circle{
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+}
+
+.released{
+  background-color: rgb(9, 149, 9);
+}
+
+.occupied{
+  background-color: var(--primary-color);
+}
+
+.allocated{
+  background-color: #2d51b6;
+}
+
+.reserved{
+  background-color: #06b6d4;
+}
+
+.color-legend{
+  border-top: 1px solid white;
+  padding: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  color: white;
+}
+
+.legend-circle{
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+}
+
+.legend-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.invisible{
+  visibility: hidden;
+}
+
+.is-today{
+  border: 1px solid white;
+}
+
+.action-icon{
+  padding: 5px;
+  border-radius: 25px;
+}
+
+.action-icon:hover{
+  cursor: pointer;
+  background-color: rgb(96, 96, 96);
+}
+
+.selected{
+  background-color: var(--accent-color);
+}
+
+.action-buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.action-buttons button{
+  background-color: transparent;
+  border: 1px solid white;
+  height: 35px;
+  color: white;
+  border-radius: 20px;
+}
+
+.invalid-selection{
+  opacity: 70%;
+  background-color: transparent;
+}

@@ -1,5 +1,4 @@
-import { Component, inject, ViewEncapsulation } from "@angular/core";
-import { ParkingLotViewComponent } from "../parking-lot-view/parking-lot-view";
+import { Component, inject} from "@angular/core";
 import ManageParkingLotsComponent from "./parking-lot-selector/manage-parking-lots";
 import { TopbarService } from "../services/topbar-service";
 
@@ -11,7 +10,7 @@ import { TopbarService } from "../services/topbar-service";
   </section>
   `,
   styleUrls: ['admin-dashboard.css'],
-  imports: [ParkingLotViewComponent, ManageParkingLotsComponent]
+  imports: [ManageParkingLotsComponent]
 })
 export class AdminDashboardComponent {
   topbarService = inject(TopbarService);

@@ -6,22 +6,10 @@ import { Topbar } from "./topbar/topbar";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, Topbar],
+  imports: [RouterOutlet, Topbar],
   template:`
     <div class="container">
       <app-topbar/>
-      <!-- <section class="top-bar">
-        <a href="/">
-          <img class="logo" src="assets/parking-lot.png" >
-        </a>
-        @if(!authenticationService.isAuthenticated()){
-          <button routerLink="/auth" class="primary-button">Login</button>
-        }
-        @else{
-          <button>{{ authenticationService.userEmail }}</button>
-          <button (click)="authenticationService.logout()">Logout</button>
-        }
-      </section> -->
       <main class="content">
         <router-outlet/>
       </main>

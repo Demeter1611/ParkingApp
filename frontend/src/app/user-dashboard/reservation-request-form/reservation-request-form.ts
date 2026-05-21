@@ -15,10 +15,6 @@ import { MatIcon } from "@angular/material/icon";
           <label for="reason">Reason</label>
           <input class="text-input" id="reason" type="reason" formControlName="reason"/>
         </div>
-        <div class="form-field">
-          <label for="date">Date</label>
-          <input id="date" type="date" formControlName="requestedDate"/>
-        </div>
         <button (click)='onSubmit()'>Make request</button>
       </form>
     </section>
@@ -27,6 +23,7 @@ import { MatIcon } from "@angular/material/icon";
 }) export default class ReservationRequestForm {
   modalVisible = output<boolean>();
   currentParkingLot = input.required<ParkingLot>();
+  requestDates = input.required<{startDate: Date, endDate: Date}>();
 
   reservationRequestForm!: FormGroup;
   reservationRequestService = inject(ReservationRequestService);
@@ -40,8 +37,7 @@ import { MatIcon } from "@angular/material/icon";
       {
         reason: new FormControl('', [
           Validators.required
-        ]),
-        requestedDate: new FormControl([Validators.required])
+        ])
       }
     );
   }
@@ -52,12 +48,12 @@ import { MatIcon } from "@angular/material/icon";
       return;
     }
 
-    const { reason, requestedDate } = this.reservationRequestForm.value;
+    const { reason } = this.reservationRequestForm.value;
 
     const response = await this.reservationRequestService.createRequest({
       parkingLotId: this.currentParkingLot().id,
       reason,
-      requestedDate
+      requestedDate: this.requestDates().startDate
     });
 
     if(!response.error){

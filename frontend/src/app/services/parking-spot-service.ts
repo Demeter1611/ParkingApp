@@ -101,16 +101,17 @@ export class ParkingSpotService {
     }
   }
 
-  async reclaimSpot(parkingSpotId: number, availabilityWindowId: number) {
+  async reclaimSpot(parkingSpotId: number, data: { startDate: Date, endDate: Date}) {
     try{
       const authToken = this.authenticationService.token;
       if(authToken){
-        const response = await fetch(`${this.url}/${parkingSpotId}/reclaim/${availabilityWindowId}`, {
-          method: 'DELETE',
+        const response = await fetch(`${this.url}/${parkingSpotId}/reclaim`, {
+          method: 'POST',
           headers: {
-            'Content-Type': 'application-json',
+            'Content-Type': 'application/json',
             'Authorization': authToken
-          }
+          },
+          body: JSON.stringify(data)
         });
         return await response.json();
       }
@@ -134,6 +135,26 @@ export class ParkingSpotService {
         return await response.json();
       }
     } catch(err) {
+      console.error(err);
+    }
+  }
+
+  async getMonthData(startOfMonth: Date, endOfMonth: Date){
+    const startOfMonthStr = startOfMonth.toISOString().split('T')[0];
+    const endOfMonthStr = endOfMonth.toISOString().split('T')[0];
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken){
+        const response = await fetch(`${this.url}/month-data?startOfMonth=${startOfMonthStr}&endOfMonth=${endOfMonthStr}`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application-json',
+            'Authorization': authToken
+          }
+        });
+        return await response.json();
+      }
+    } catch (err){
       console.error(err);
     }
   }
