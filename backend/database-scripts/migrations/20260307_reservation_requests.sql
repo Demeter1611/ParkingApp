@@ -14,7 +14,8 @@ BEGIN
         userId INT FOREIGN KEY REFERENCES Users(id),
         parkingLotId INT FOREIGN KEY REFERENCES ParkingLots(id),
         reason VARCHAR(255),
-        requestedDate DATE NOT NULL,
+        startDate DATE NOT NULL,
+        endDate DATE NOT NULL,
         dateOfRequest DATETIME2 NOT NULL,
         statusId INT FOREIGN KEY REFERENCES RequestStatuses(id)
     )

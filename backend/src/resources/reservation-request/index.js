@@ -6,26 +6,28 @@ const RESERVATION_REQUEST_FIELDS = `
     req.userId,
     req.parkingLotId,
     req.reason,
-    req.requestedDate,
+    req.startDate,
+    req.endDate,
     req.dateOfRequest
 `
 
 module.exports = {
-    add: async(userId, parkingLotId, reason, requestedDate, dateOfRequest) => {
-        console.log(requestedDate, dateOfRequest);
+    add: async(userId, parkingLotId, reason, startDate, endDate, dateOfRequest) => {
         const result = await sqlRequest()
             .input('userId', userId)
             .input('parkingLotId', parkingLotId)
             .input('reason', reason)
-            .input('requestedDate', requestedDate)
+            .input('startDate', startDate)
+            .input('endDate', endDate)
             .input('dateOfRequest', dateOfRequest)
             .query(`
-                    INSERT INTO ReservationRequests(userId, parkingLotId, reason, requestedDate, dateOfRequest, statusId)
+                    INSERT INTO ReservationRequests(userId, parkingLotId, reason, startDate, endDate, dateOfRequest, statusId)
                     VALUES(
                         @userId,
                         @parkingLotId, 
                         @reason, 
-                        @requestedDate,
+                        @startDate,
+                        @endDate,
                         @dateOfRequest,
                         (SELECT id FROM RequestStatuses WHERE statusName = 'pending')
                     );
@@ -75,7 +77,8 @@ module.exports = {
     search: async(searchQuery) => {
         const result = await sqlRequest()
             .input('parkingLotId', searchQuery.parkingLotId)
-            .input('requestedDate', searchQuery.requestedDate)
+            .input('startDate', searchQuery.startDate)
+            .input('endDate', searchQuery.endDate)
             .input('status', searchQuery.status)
             .query(`
                     SELECT
@@ -87,7 +90,8 @@ module.exports = {
                     INNER JOIN RequestStatuses s ON s.id=req.statusId
                     WHERE
                     req.parkingLotId = @parkingLotId
-                    AND (@requestedDate IS NULL OR req.requestedDate = @requestedDate)
+                    AND (@startDate IS NULL OR req.startDate = @startDate)
+                    AND (@endDate IS NULL OR req.endDate = @endDate)
                     AND (@status IS NULL OR s.statusName = @status)
                     ORDER BY req.dateOfRequest ASC
                 `);

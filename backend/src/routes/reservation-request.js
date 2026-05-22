@@ -10,19 +10,20 @@ const { verifyLogin, roleChecker, ROLE_LIST } = require('../middlewares/auth-mid
 
 router.post('/', verifyLogin, roleChecker([ROLE_LIST.user]), async(ctx, next) => {
     const userId = ctx.user.id;
-    const { parkingLotId, reason, requestedDate} = ctx.request.body;
-    if(!userId, !reason, !requestedDate) {
+    const { parkingLotId, reason, startDate, endDate} = ctx.request.body;
+    if(!userId, !reason, !startDate, !endDate) {
         throw { status: 400, message: { error: 'All fields are required' }};
     };
 
     const dateOfRequest = new Date();
     try{
-        const reservationRequestId = await reservationRequestAPI.add(userId, parkingLotId, reason, requestedDate, dateOfRequest);
+        const reservationRequestId = await reservationRequestAPI.add(userId, parkingLotId, reason, startDate, endDate, dateOfRequest);
         ctx.response.status = 201;
         ctx.response.body = {
             id: reservationRequestId,
             ...ctx.request.body,
-            requestedDate
+            startDate,
+            endDate
         };
     } catch(err) {
         throw { status: 400, message: { error: err } }
@@ -43,11 +44,9 @@ router.post('/:id/fulfill', verifyLogin, roleChecker([ROLE_LIST.user]), async(ct
             throw { status: 400, message: { error: 'Request is no longer available' } };
         }
 
-        const { userId, requestedDate } = reservationRequest;
+        const { userId, startDate, endDate } = reservationRequest;
 
-        const reservationDate = new Date(requestedDate).toISOString().split('T')[0];
-
-        const reservation = await reservationAPI.addReservation(spotId, userId, reservationDate, reservationDate);
+        const reservation = await reservationAPI.addReservation(spotId, userId, startDate.toISOString().split('T')[0], endDate.toISOString().split('T')[0]);
         
         await reservationRequestAPI.update({id: reservationRequestId, status: 'fulfilled'});
         ctx.response.status = 201;
@@ -58,11 +57,11 @@ router.post('/:id/fulfill', verifyLogin, roleChecker([ROLE_LIST.user]), async(ct
 });
 
 router.get('/', async(ctx, next) => {
-    const {parkingLotId, requestedDate, status} = ctx.request.query;
+    const {parkingLotId, startDate, endDate, status} = ctx.request.query;
     if(!parkingLotId){
         throw { status: 400, message: { error: 'ParkingLotId required'}};
     };
-    const reservationRequests = await reservationRequestAPI.search({parkingLotId, requestedDate, status});
+    const reservationRequests = await reservationRequestAPI.search({parkingLotId, startDate, endDate, status});
     ctx.response.status = 200;
     ctx.response.body = reservationRequests
 });

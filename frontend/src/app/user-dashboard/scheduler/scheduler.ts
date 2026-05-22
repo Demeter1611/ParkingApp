@@ -63,7 +63,7 @@ interface CalendarDay{
       </div>
       <div class="action-buttons">
         @if(selectionStart && selectionEnd){
-          @if(initialSelectionStatus === 'allocated'){
+          @if(initialSelectionStatus === 'allocated' || initialSelectionStatus === 'reserved'){
             <button (click)="onRelease()">Release spot</button>
           }
           @else if(initialSelectionStatus === 'released'){

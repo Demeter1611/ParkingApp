@@ -53,7 +53,8 @@ import { MatIcon } from "@angular/material/icon";
     const response = await this.reservationRequestService.createRequest({
       parkingLotId: this.currentParkingLot().id,
       reason,
-      requestedDate: this.requestDates().startDate
+      startDate: this.requestDates().startDate,
+      endDate: this.requestDates().endDate
     });
 
     if(!response.error){

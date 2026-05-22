@@ -12,7 +12,7 @@ import { ParkingSpot } from "../../../interfaces/parkingspot";
       <div class="details">
         <span class="reason">{{this.currentRequest().reason}}</span>
         <span class="user">Username: {{this.currentRequest().username}}</span>
-        <span class="date">Date: {{this.currentRequest().requestedDate | date: 'yyyy-MM-dd'}}</span>
+        <span class="date">{{this.currentRequest().startDate | date: 'yyyy-MM-dd'}} -- {{this.currentRequest().endDate | date: 'yyyy-MM-dd'}}</span>
       </div>
       @if(mySpot() && mySpot()?.status !== 'reserved'){
         <button (click)="onFulfill()">Fulfill request</button>

@@ -3,7 +3,8 @@ export interface ReservationRequest{
   username: string,
   parkingLotId: number,
   reason: string,
-  requestedDate: Date,
+  startDate: Date,
+  endDate: Date,
   dateOfRequest: Date,
   status: string
 }
