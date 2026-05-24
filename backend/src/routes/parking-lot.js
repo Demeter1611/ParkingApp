@@ -156,6 +156,14 @@ router.get('/:id', async(ctx, next) => {
     ctx.response.body = parkingLots;
 })
 
+router.get('/:id/available-spots', verifyLogin, async(ctx, next) => {
+    const lotId = ctx.params.id;
+    const { startDate, endDate } = ctx.query;
+    const availableSpots = await parkingLotAPI.getAllAvailableSpots(lotId, startDate, endDate);
+    ctx.response.status = 200;
+    ctx.response.body = availableSpots;
+})
+
 module.exports = {
     router
 }

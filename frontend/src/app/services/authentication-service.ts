@@ -64,6 +64,11 @@ export class AuthenticationService {
       return null;
     }
   }
+
+  get id(){
+    return this.user?.id;
+  }
+
   get userEmail() {
     return this.user?.email;
   }

@@ -189,4 +189,24 @@ export class ParkingLotService {
       console.error(err);
     }
   }
+
+  async getAllAvailableSpots(parkingLotId: number, startDate: Date, endDate: Date){
+    try {
+      const authToken = this.authenticationService.token;
+      const startDateParam = startDate.toISOString().split('T')[0];
+      const endDateParam = endDate.toISOString().split('T')[0];
+      if(authToken) {
+        const response = await fetch(`${this.url}/${parkingLotId}/available-spots?startDate=${startDateParam}&endDate=${endDateParam}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authToken
+          }
+        });
+
+        return await response.json();
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
 }

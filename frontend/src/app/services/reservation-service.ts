@@ -4,7 +4,7 @@ import { AuthenticationService } from "./authentication-service";
 @Injectable({
   providedIn: 'root'
 })
-export class ParkingLotService {
+export class ReservationService {
   url='http://localhost:4001/reservation'
   authenticationService = inject(AuthenticationService);
 

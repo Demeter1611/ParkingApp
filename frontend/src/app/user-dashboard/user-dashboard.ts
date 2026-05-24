@@ -9,6 +9,7 @@ import { ParkingSpotService } from "../services/parking-spot-service";
 import ReservationRequestForm from "./reservation-request-form/reservation-request-form";
 import { Scheduler } from "./scheduler/scheduler";
 import { MatIcon } from "@angular/material/icon";
+import AvailableSpotsView from "./available-spots-view/available-spots-view";
 
 @Component({
   selector: 'app-user-dashboard',
@@ -25,32 +26,41 @@ import { MatIcon } from "@angular/material/icon";
       @else {
         <app-scheduler
         [mySpot]="mySpot"
-        (openMakeRequest)="handleOpenMakeRequest($event)"/>
+        (openMakeRequest)="handleOpenMakeRequest($event)"
+        (openAvailableSpots)="handleOpenAvailableSpots($event)"
+        (selectionCleared)="handleClearSelection()"/>
       }
     </div>
     @if(this.accessibleParkingLots.length > 0){
-      <app-community-hub
-      [parkingLotId]="this.selectedParkingLot.id"
-      [mySpot]="mySpot"/>
+      @if(availableSpotsVisible && selectedDates){
+        <app-available-spots-view
+        [currentParkingLot]="this.selectedParkingLot"
+        [searchInterval]="this.selectedDates"
+        (selectionCleared)="handleClearSelection()"/>
+      }@else {
+        <app-community-hub
+        [parkingLotId]="this.selectedParkingLot.id"
+        [mySpot]="mySpot"/>
+      }
     }
-    @if(makeRequestVisible && selectedRequestDates){
+    @if(requestVisible && selectedDates){
       <app-reservation-request-form
       [currentParkingLot]="this.selectedParkingLot"
-      [requestDates]="this.selectedRequestDates"
-      (modalVisible)="this.makeRequestVisible = $event"/>
+      [requestDates]="this.selectedDates"
+      (modalVisible)="this.requestVisible = $event"/>
     }
   </section>
   `,
   styleUrls: ['user-dashboard.css'],
-  imports: [TodayStatus, CommunityHub, ReservationRequestForm, Scheduler, MatIcon]
+  imports: [TodayStatus, CommunityHub, ReservationRequestForm, Scheduler, MatIcon, AvailableSpotsView]
 }) export class UserDashboard{
   topbarService = inject(TopbarService);
   parkingLotService = inject(ParkingLotService);
   parkingSpotService = inject(ParkingSpotService);
   availableSpotsVisible: boolean = false;
   schedulerVisible: boolean = false;
-  makeRequestVisible: boolean = false;
-  selectedRequestDates: {startDate: Date, endDate: Date} | null = null;
+  requestVisible: boolean = false;
+  selectedDates: {startDate: Date, endDate: Date} | null = null;
 
 
   mySpot: ParkingSpot | null = null;
@@ -67,7 +77,18 @@ import { MatIcon } from "@angular/material/icon";
   }
 
   handleOpenMakeRequest(dates: {startDate: Date, endDate: Date}) {
-    this.selectedRequestDates = dates;
-    this.makeRequestVisible = true;
+    this.selectedDates = dates;
+    this.requestVisible = true;
+  }
+
+  handleOpenAvailableSpots(dates: {startDate: Date, endDate: Date}) {
+    this.selectedDates = dates;
+    this.availableSpotsVisible = true;
+  }
+
+  handleClearSelection(){
+    this.selectedDates = null;
+    this.requestVisible = false;
+    this.availableSpotsVisible = false;
   }
 }

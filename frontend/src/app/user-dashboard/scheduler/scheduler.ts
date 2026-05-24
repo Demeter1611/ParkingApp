@@ -69,7 +69,7 @@ interface CalendarDay{
           @else if(initialSelectionStatus === 'released'){
             <button (click)="onReclaim()">Reclaim spot</button>
           }
-          @else {
+          @else if(initialSelectionStatus !== 'occupied'){
             <button (click)="onRequest()">Make request</button>
           }
         }
@@ -87,6 +87,8 @@ interface CalendarDay{
   parkingSpotService = inject(ParkingSpotService);
   mySpot = input<ParkingSpot | null>();
   openMakeRequest = output<{startDate: Date, endDate: Date}>();
+  openAvailableSpots = output<{startDate: Date, endDate: Date}>();
+  selectionCleared = output<void>();
 
   calendarCells: CalendarDay[] = [];
   currentMonth: number;
@@ -220,8 +222,11 @@ interface CalendarDay{
     this.isDragging = false;
     if(this.selectionStart && this.selectionEnd){
       this.finalSelection = this.getOrderedRange();
+      const finalSelectionDates = this.getFinalSelectionDates();
+      if(!this.initialSelectionStatus && finalSelectionDates){
+        this.openAvailableSpots.emit(finalSelectionDates);
+      }
     }
-    console.log(this.finalSelection);
   }
 
   private getOrderedRange(){
@@ -247,6 +252,8 @@ interface CalendarDay{
     this.selectionEnd = null;
     this.finalSelection = null;
     this.isDragging = false;
+
+    this.selectionCleared.emit();
   }
 
   private getFinalSelectionDates(){

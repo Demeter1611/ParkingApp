@@ -16,10 +16,10 @@ import { Component, input, output } from "@angular/core";
       @else {
         <h1 class="today-card-text">You've got no parking spot for today</h1>
         <div class="action-buttons">
-          <button class="today-card-button" (click)="openAvailableSpots.emit(true)">View available spots</button>
-        </div>
-      }
-    </div>
+          </div>
+        }
+        <button class="today-card-button" (click)="openAvailableSpots.emit(true)">View available spots</button>
+      </div>
   `,
   styleUrls: ['today-status.css']
 }) export class TodayStatus{

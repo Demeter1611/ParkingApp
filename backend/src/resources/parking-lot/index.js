@@ -162,5 +162,92 @@ module.exports = {
                         AND upa.userId = @userId
                 `)
         return result.recordset.length !== 0;
+    },
+
+    getAllAvailableSpots: async (parkingLotId, startDate, endDate) => {
+        const windowsResult = await sqlRequest()
+            .input('parkingLotId', parkingLotId)
+            .input('startDate', startDate)
+            .input('endDate', endDate)
+            .query(`
+                    SELECT aw.spotId, p.name AS spotName, aw.startDate, aw.endDate
+                    FROM AvailabilityWindows aw
+                    INNER JOIN ParkingSpots p ON aw.spotId = p.id
+                    WHERE p.parkingLotId = @parkingLotId
+                        AND aw.endDate >= @startDate
+                        AND aw.startDate <= @endDate
+                `);
+        
+        const reservationsResult = await sqlRequest()
+                .input('parkingLotId', parkingLotId)
+                .input('startDate', startDate)
+                .input('endDate', endDate)
+                .query(`
+                        SELECT r.spotId, r.startDate, r.endDate
+                        FROM Reservations r
+                        INNER JOIN ParkingSpots p on r.spotId = p.id
+                        WHERE p.parkingLotId = @parkingLotId
+                            AND r.endDate >= @startDate
+                            AND r.startDate <= @endDate
+                    `);
+        
+        const windows = windowsResult.recordset;
+        const reservations = reservationsResult.recordset;
+
+        const spotsMap = new Map();
+        
+        for (const win of windows) {
+            if (!spotsMap.has(win.spotId)) {
+                spotsMap.set(win.spotId, {
+                    spotId: win.spotId,
+                    spotName: win.spotName,
+                    availablePeriods: []
+                });
+            }
+
+            spotsMap.get(win.spotId).availablePeriods.push({
+                startDate: new Date(win.startDate),
+                endDate: new Date(win.endDate)
+            });
+        }
+
+        for (const res of reservations) {
+            const spot = spotsMap.get(res.spotId);
+            if (!spot) continue;
+
+            const resStart = new Date(res.startDate);
+            const resEnd = new Date(res.endDate);
+
+            let newAvailablePeriods = [];
+            
+            for (const win of spot.availablePeriods) {
+                if(resStart <= win.endDate && resEnd >= win.startDate) {
+                    if (resStart > win.startDate) {
+                        const beforeEnd = new Date(resStart);
+                        beforeEnd.setDate(beforeEnd.getDate() - 1);
+                        newAvailablePeriods.push({ startDate: win.startDate, endDate: beforeEnd });
+                    }
+                    
+                    if (resEnd < win.endDate) {
+                        const afterStart = new Date(resEnd);
+                        afterStart.setDate(afterStart.getDate() + 1);
+                        newAvailablePeriods.push({startDate: afterStart, endDate: win.endDate});
+                    }
+                } else {
+                    newAvailablePeriods.push(win);
+                }
+            }
+            spot.availablePeriods = newAvailablePeriods;
+        }
+        
+        const finalResult = [];
+
+        for (const spot of spotsMap.values()) {
+            if (spot.availablePeriods.length > 0) {
+                finalResult.push(spot);
+            }
+        }
+
+        return finalResult;
     }
 }
