@@ -154,7 +154,6 @@ export class AuthenticationComponent {
     const params = this.route.snapshot.queryParamMap;
     this.mode = params.get('mode');
     this.inviteToken = params.get('invite-token');
-    console.log(this.mode, this.inviteToken);
 
     this.login = new FormGroup(
       {

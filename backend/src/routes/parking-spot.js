@@ -26,6 +26,17 @@ router.post('/', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next)
     }
 })
 
+router.delete('/:id', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next) => {
+    const parkingSpotId = ctx.params.id;
+    const deleteResult = await parkingSpotAPI.delete(parkingSpotId);
+
+    if (!deleteResult) {
+        throw { status: 404, message: { error: 'Parking spot not found' }};
+    }
+
+    ctx.response.status = 200;
+    ctx.response.body = {message: 'Parking spot has been deleted'};
+})
 
 router.post('/bulk', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next) => {
     /*
@@ -45,6 +56,7 @@ router.post('/bulk', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, n
             parkingLotId: @int
     */
     const { parkingSpotGenerator, parkingLotId } = ctx.request.body;
+    console.log(parkingLotId);
     const { pattern, startRange, endRange, padding } = parkingSpotGenerator;
     
     if (startRange > endRange) {

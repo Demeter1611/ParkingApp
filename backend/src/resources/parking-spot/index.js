@@ -145,5 +145,15 @@ module.exports = {
                     `);
 
         return [...released.recordset, allocation.recordset[0], ...occupiedByOthers.recordset];
+    },
+    
+    delete: async(id) => {
+        const result = await sqlRequest()
+            .input('id', id)
+            .query(`
+                DELETE FROM ParkingSpots
+                WHERE id = @id
+                `)
+        return result.rowsAffected[0] > 0;
     }
 }

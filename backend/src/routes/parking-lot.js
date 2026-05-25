@@ -35,15 +35,15 @@ async function getAllSpotsWithStatus(parkingLotId, targetDate){
 }
 
 router.post('/', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next) => {
-    const { name, address, maxCapacity, timeslotsEnabled, sharingEnabled, temporaryOnlyEnabled, visitorSpotsEnabled, simplifiedGridEnabled} = ctx.request.body;
-    if(!name || !address || !maxCapacity){
+    const { name, address } = ctx.request.body;
+    if(!name || !address){
         throw { status: 400, message: { error: 'All fields are required' }};
     }
     const user = ctx.user;
     const userId = user.id;
 
     try{
-        const parkingLotId = await parkingLotAPI.add(name, address, maxCapacity, timeslotsEnabled, sharingEnabled, temporaryOnlyEnabled, visitorSpotsEnabled, simplifiedGridEnabled, userId);
+        const parkingLotId = await parkingLotAPI.add(name, address, userId);
 
         ctx.response.status = 201;
         ctx.response.body = {

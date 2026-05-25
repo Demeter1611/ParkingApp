@@ -32,7 +32,7 @@ export class ParkingSpotService {
         const response = await fetch(`${this.url}/bulk`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application-json',
+            'Content-Type': 'application/json',
             'Authorization': authToken
           },
           body: JSON.stringify(data)
@@ -44,6 +44,23 @@ export class ParkingSpotService {
     }
   }
 
+  async submitDeleteRequest(parkingSpotId: number) {
+    try{
+      const authToken = this.authenticationService.token;
+      if(authToken) {
+        const response = await fetch(`${this.url}/${parkingSpotId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': authToken
+          }
+        });
+        return await response.json();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   async allocateSpot(parkingSpotId: number, userId: number){
     try{
       const authToken = this.authenticationService.token;
@@ -51,10 +68,10 @@ export class ParkingSpotService {
         const response = await fetch(`${this.url}/${parkingSpotId}/allocate`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application-json',
+            'Content-Type': 'application/json',
             'Authorization': authToken
           },
-          body: JSON.stringify(userId)
+          body: JSON.stringify({userId})
         });
         return await response.json();
       }
@@ -70,7 +87,7 @@ export class ParkingSpotService {
         const response = await fetch(`${this.url}/${parkingSpotId}/deallocate`, {
           method: 'DELETE',
           headers: {
-            'Content-Type': 'application-json',
+            'Content-Type': 'application/json',
             'Authorization': authToken
           },
           body: JSON.stringify(userId)
@@ -128,7 +145,7 @@ export class ParkingSpotService {
         const response = await fetch(`${this.url}/mine?targetDate=${dateStr}`, {
           method: 'GET',
           headers: {
-            'Content-Type': 'application-json',
+            'Content-Type': 'application/json',
             'Authorization': authToken
           }
         });
@@ -148,7 +165,7 @@ export class ParkingSpotService {
         const response = await fetch(`${this.url}/month-data?startOfMonth=${startOfMonthStr}&endOfMonth=${endOfMonthStr}`,{
           method: 'GET',
           headers: {
-            'Content-Type': 'application-json',
+            'Content-Type': 'application/json',
             'Authorization': authToken
           }
         });
