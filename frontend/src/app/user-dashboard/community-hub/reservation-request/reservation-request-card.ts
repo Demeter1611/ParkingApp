@@ -1,4 +1,4 @@
-import { Component, inject, input } from "@angular/core";
+import { Component, inject, input, output } from "@angular/core";
 import { ReservationRequest } from "../../../interfaces/reservationrequest";
 import { DatePipe } from "@angular/common";
 import { ReservationRequestService } from "../../../services/reservation-request-service";
@@ -23,6 +23,7 @@ import { ParkingSpot } from "../../../interfaces/parkingspot";
 }) export class ReservationRequestCard {
   reservationRequestService = inject(ReservationRequestService);
   currentRequest = input.required<ReservationRequest>();
+  refreshReservations = output<void>();
   mySpot = input<ParkingSpot | null>();
 
   async onFulfill(){
@@ -30,5 +31,6 @@ import { ParkingSpot } from "../../../interfaces/parkingspot";
     if(spot){
       await this.reservationRequestService.fulfillRequest(this.currentRequest().id, {spotId: spot.id});
     }
+    this.refreshReservations.emit();
   }
 }

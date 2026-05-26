@@ -1,7 +1,15 @@
-.scheduler{
-  padding: 25px;
-  border-radius: 25px;
-  align-items: center;
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Preia tot spațiul rămas din left-card */
+}
+
+.scheduler {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: 10px 0;
 }
 
 .calendar-header{
@@ -119,18 +127,34 @@
   border: 1px solid white;
 }
 
-.action-buttons{
+.scheduler-actions {
+  margin-top: auto;
+  padding-top: 20px;
+  padding-bottom: 10px;
   display: flex;
-  flex-direction: row;
   justify-content: center;
+  width: 100%;
 }
 
-.action-buttons button{
+.bottom-action-btn {
   background-color: transparent;
-  border: 1px solid white;
-  height: 35px;
+  color: #cbd5e1;
+  border: 1px solid #475569;
+  padding: 10px 24px;
+  border-radius: 24px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 80%;
+  max-width: 250px;
+}
+
+.bottom-action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: #cbd5e1;
   color: white;
-  border-radius: 20px;
+
 }
 
 .invalid-selection{

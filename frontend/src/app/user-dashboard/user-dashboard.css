@@ -13,17 +13,45 @@
   height: 80vh;
   border-radius: 20px;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
-.calendar-icon{
-  color: white;
-  padding: 5px;
-  border-radius: 25px;
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.calendar-icon:hover{
+.calendar-icon {
+  color: #94a3b8;
+  padding: 6px;
+  border-radius: 50%;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-icon:hover {
   cursor: pointer;
-  background-color: var(--accent-color);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
+.assigned-spot {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 

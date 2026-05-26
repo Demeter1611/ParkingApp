@@ -1,18 +1,76 @@
-.community-hub{
+.community-hub {
   display: flex;
   flex-direction: column;
-  padding: 30px;
+  padding: 24px;
   background-color: var(--secondary-color);
   border-radius: 20px;
+  height: 80vh;
 }
 
-.card-title{
+.card-title {
   color: white;
-  font-size: 2rem;
+  font-size: 1.5rem;
+  margin: 0 0 20px 0;
+  font-weight: 600;
 }
 
-.reservation-list{
+.reservation-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.hidden-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.hidden-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.hidden-scroll::-webkit-scrollbar-thumb {
+  background-color: #334155;
+  border-radius: 10px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+.icon-circle {
+  background-color: rgba(255, 255, 255, 0.03);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.empty-icon {
+  font-size: 40px;
+  height: 40px;
+  width: 40px;
+  color: #475569;
+}
+
+.empty-title {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.empty-subtitle {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  max-width: 300px;
+  line-height: 1.5;
+  margin: 0;
 }

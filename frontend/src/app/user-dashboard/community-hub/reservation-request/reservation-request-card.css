@@ -1,37 +1,62 @@
-.reservation-request-card{
+.reservation-request-card {
   display: flex;
-  padding: 20px;
-  background-color: #152d3f;
-  border-radius: 20px;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  font-family: var(--font-base);
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.reservation-request-card button{
-  background-color: var(--primary-color);
-  color: white;
-  font-size: 1.3rem;
-  border: 0px;
-  border-radius: 20px;
-  width: 175px;
-  height: 50px;
+.reservation-request-card:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
-.details{
+.details {
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 
-.reason{
-  font-size: 1.6rem;
-  margin-bottom: 5px;
+.reason {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
-.date, .user{
-  margin-left: 10px;
-  color :rgb(144, 141, 141);
-  font-size: 1rem;
+.user {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.date {
+  display: inline-block;
+  margin-top: 4px;
+  background-color: rgba(249, 115, 22, 0.15);
+  color: var(--primary-color);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+button {
+  background-color: transparent;
+  color: #10b981;
+  border: 1px solid #10b981;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+button:hover {
+  background-color: #10b981;
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }

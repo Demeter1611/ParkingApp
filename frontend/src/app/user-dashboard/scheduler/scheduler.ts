@@ -61,16 +61,16 @@ interface CalendarDay{
           Released
         </div>
       </div>
-      <div class="action-buttons">
+      <div class="scheduler-actions">
         @if(selectionStart && selectionEnd){
           @if(initialSelectionStatus === 'allocated' || initialSelectionStatus === 'reserved'){
-            <button (click)="onRelease()">Release spot</button>
+            <button class="bottom-action-btn" (click)="onRelease()">Release spot</button>
           }
           @else if(initialSelectionStatus === 'released'){
-            <button (click)="onReclaim()">Reclaim spot</button>
+            <button class="bottom-action-btn" (click)="onReclaim()">Reclaim spot</button>
           }
           @else if(initialSelectionStatus !== 'occupied'){
-            <button (click)="onRequest()">Make request</button>
+            <button class="bottom-action-btn" (click)="onRequest()">Make request</button>
           }
         }
       </div>

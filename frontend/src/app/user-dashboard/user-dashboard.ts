@@ -16,7 +16,12 @@ import AvailableSpotsView from "./available-spots-view/available-spots-view";
   template:`
   <section class="user-dashboard">
     <div class="left-card">
-      <mat-icon class="calendar-icon" (click)="schedulerVisible = !schedulerVisible">calendar_today</mat-icon>
+      <div class="card-header">
+        <mat-icon class="calendar-icon" (click)="schedulerVisible = !schedulerVisible">calendar_today</mat-icon>
+        @if(mySpot && schedulerVisible){
+          <span class="assigned-spot">Assigned: {{ mySpot.name }}</span>
+        }
+      </div>
       @if(!schedulerVisible){
         <app-today-status
         [parkingSpot]="mySpot"
