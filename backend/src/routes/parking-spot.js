@@ -5,6 +5,7 @@ const router = new Router({
 
 const parkingSpotAPI = require('../resources/parking-spot');
 const reservationAPI = require('../resources/reservations');
+const notificationAPI = require('../resources/notifications');
 const { verifyLogin, roleChecker, ROLE_LIST } = require('../middlewares/auth-middleware');
 
 router.post('/', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next) => {
@@ -56,8 +57,8 @@ router.post('/bulk', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, n
             parkingLotId: @int
     */
     const { parkingSpotGenerator, parkingLotId } = ctx.request.body;
-    console.log(parkingLotId);
     const { pattern, startRange, endRange, padding } = parkingSpotGenerator;
+    const userId = ctx.user.id;
     
     if (startRange > endRange) {
         throw { status: 400, message: 'Start range must be smaller than end range.'};
@@ -80,7 +81,13 @@ router.post('/bulk', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, n
 
     try{
         const spotsAdded = await parkingSpotAPI.addBulk(parkingSpots, parkingLotId);
-
+        
+        await notificationAPI.add(
+            userId,
+            'Bulk Creation Successful',
+            `You have successfully generated ${spotsAdded} new parking spots.`,
+            'success'
+        );
         ctx.response.status = 200;
         ctx.response.body = { message: `Added ${spotsAdded} parking spots` };
     } catch (err) {
@@ -98,6 +105,13 @@ router.post('/:id/allocate', verifyLogin, roleChecker([ROLE_LIST.parking]), asyn
 
     try{
         const allocationId = await reservationAPI.addAllocation(spotId, userId);
+
+        await notificationAPI.add(
+            userId,
+            'Spot Allocated!',
+            `An administrator has permanently allocated a parking spot to you.`,
+            'success'
+        );
 
         ctx.response.status = 200;
         ctx.response.body = { id: allocationId, spotId, ...ctx.request.body}
@@ -137,7 +151,13 @@ router.post('/:id/release', verifyLogin, async(ctx, next) => {
 
     try{
         const availabilityWindowId = await reservationAPI.addAvailabilityWindow(spotId, userId, startDate, endDate);
-
+        
+        await notificationAPI.add(
+            userId,
+            'Spot Released',
+            `You released your spot from ${startDate.toISOString().split('T')[0]} to ${endDate.toISOString().split('T')[0]}.`,
+            'success'
+        );
         ctx.response.status = 200;
         ctx.response.body = {
             id: availabilityWindowId,

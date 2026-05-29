@@ -16,7 +16,7 @@ interface CalendarDay{
 @Component({
   selector: 'app-scheduler',
   template: `
-    <section class="scheduler no-select" (mouseup)="finishSelection()" (contextmenu)="cancelSelection($event)">
+    <section class="scheduler no-select" (mouseup)="finishSelection()" (contextmenu)="cancelSelection()">
       <div class='month-selector'>
         <mat-icon (click)="onPrev()" class="action-icon">arrow_back</mat-icon>
         <h2 class='month-name'>{{monthNames[currentMonth]}} {{currentYear}}</h2>
@@ -189,6 +189,7 @@ interface CalendarDay{
     } else{
       this.currentMonth++;
     }
+    this.cancelSelection();
     this.generateCalendar(this.currentYear, this.currentMonth);
   }
 
@@ -199,6 +200,7 @@ interface CalendarDay{
     } else{
       this.currentMonth--;
     }
+    this.cancelSelection();
     this.generateCalendar(this.currentYear, this.currentMonth);
   }
 
@@ -245,8 +247,7 @@ interface CalendarDay{
     return day >= min && day <= max;
   }
 
-  cancelSelection(event: MouseEvent){
-    event.preventDefault();
+  cancelSelection(){
 
     this.selectionStart= null;
     this.selectionEnd = null;

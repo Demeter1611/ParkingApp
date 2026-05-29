@@ -35,7 +35,6 @@ body::before {
 
 main, header, footer, section {
   position: relative;
-  z-index: 1;
   font-family: var(--font-base);
 }
 
@@ -75,6 +74,7 @@ main, header, footer, section {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10001;
 }
 
 .close-modal-button {

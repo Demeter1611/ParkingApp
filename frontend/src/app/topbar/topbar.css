@@ -3,6 +3,8 @@
   flex-direction: row;
   padding: 10px;
   justify-content: space-between;
+  position: relative; 
+  z-index: 1000;
 }
 
 .with-bg{

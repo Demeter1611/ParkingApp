@@ -1,3 +1,11 @@
 CREATE DATABASE parking_app
 GO
 
+CREATE LOGIN bro WITH PASSWORD = 'bro';
+GO
+
+CREATE USER bro FOR LOGIN bro;
+GO
+
+ALTER ROLE db_owner ADD MEMBER bro;
+GO

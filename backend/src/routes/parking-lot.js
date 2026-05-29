@@ -4,6 +4,7 @@ const router = new Router({
 });
 
 const parkingLotAPI = require('../resources/parking-lot');
+const notificationAPI = require('../resources/notifications');
 const parkingSpotAPI = require('../resources/parking-spot');
 const ReservationAPI = require('../resources/reservations');
 const { verifyLogin, roleChecker, ROLE_LIST } = require('../middlewares/auth-middleware');
@@ -45,13 +46,20 @@ router.post('/', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next)
     try{
         const parkingLotId = await parkingLotAPI.add(name, address, userId);
 
+        await notificationAPI.add(
+            userId,
+            'Parking Lot Created',
+            `You have successfully created the parking lot: ${name}.`,
+            'success'
+        );
+
         ctx.response.status = 201;
         ctx.response.body = {
             ...ctx.request.body,
             id: parkingLotId
         };
     } catch (err) {
-        throw {status: 400, message: { error: 'Invalid field types' }};
+        throw {status: 400, message: { error: err.message }};
     }
 })
 
@@ -110,7 +118,13 @@ router.post('/:id/give-access/:userId', async(ctx, next) => {
 
     try{
         const userParkingAccessId = await parkingLotAPI.addUserParkingAccess(parkingLotId, userId);
-
+        await notificationAPI.add(
+            userId,
+            'Parking Access Granted',
+            `You have been granted access to a new parking lot.`,
+            'success'
+        );
+        
         ctx.response.status = 201;
         ctx.response.body = {
             ...userParkingAccessId
@@ -129,6 +143,13 @@ router.delete('/:id/revoke-access/:userId', async(ctx, next) => {
         throw { status: 404, message: { error: 'User does not have access to parking lot' }};
     }
 
+    await notificationAPI.add(
+        userId, 
+        'Parking Access Revoked',
+        `Your access to the parking lot has been revoked by an administrator.`,
+        'warning'
+    );
+    
     ctx.response.status = 200;
     ctx.response.body = {message: 'User access revoked'};
 })

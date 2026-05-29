@@ -6,6 +6,7 @@ const router = new Router({
 
 const reservationRequestAPI = require('../resources/reservation-request');
 const reservationAPI = require('../resources/reservations');
+const notificationAPI = require('../resources/notifications');
 const { verifyLogin, roleChecker, ROLE_LIST } = require('../middlewares/auth-middleware');
 
 router.post('/', verifyLogin, roleChecker([ROLE_LIST.user]), async(ctx, next) => {
@@ -49,6 +50,13 @@ router.post('/:id/fulfill', verifyLogin, roleChecker([ROLE_LIST.user]), async(ct
         const reservation = await reservationAPI.addReservation(spotId, userId, startDate.toISOString().split('T')[0], endDate.toISOString().split('T')[0]);
         
         await reservationRequestAPI.update({id: reservationRequestId, status: 'fulfilled'});
+
+        await notificationAPI.add(
+            userId, 
+            'Request Fulfilled!',
+            `A colleague has offered you their parking spot for the requested period.`,
+            'success'
+        );
         ctx.response.status = 201;
         ctx.response.body = reservation;
     } catch(err){

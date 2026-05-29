@@ -4,6 +4,7 @@ const router = new Router({
 });
 
 const reservationAPI = require('../resources/reservations');
+const notificationAPI = require('../resources/notifications');
 const { verifyLogin, roleChecker, ROLE_LIST } = require('../middlewares/auth-middleware');
 
 router.post('/', verifyLogin, async(ctx, next) => {
@@ -24,6 +25,13 @@ router.post('/', verifyLogin, async(ctx, next) => {
             id: reservationId,
             ...ctx.request.body
         }
+
+        await notificationAPI.add(
+            userId,
+            'Reservation Confirmed',
+            `Your spot has been successfully reserved from ${startDate} to ${endDate}.`,
+            'info'
+        );
     } catch (err) {
         throw { status: 400, message: { error: 'Invalid field types' }};
     }
