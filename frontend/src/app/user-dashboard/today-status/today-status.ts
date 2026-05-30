@@ -20,14 +20,6 @@ import { MatIcon } from "@angular/material/icon";
             <h2 class="spot-number">{{ parkingSpot()?.name }}</h2>
           </div>
         </div>
-
-        <div class="action-buttons">
-          @if(parkingSpot()?.status !== 'released') {
-            <button class="today-card-button btn-outline">
-              <mat-icon>no_crash</mat-icon> Release Spot
-            </button>
-          }
-        </div>
       }
       @else {
         <div class="empty-state">
