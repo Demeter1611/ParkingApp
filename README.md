@@ -132,7 +132,7 @@ The app is served on `http://localhost:4200`.
 
 ----
 
-## 🗺️ Roadmap
+## Roadmap
 
 Planned future directions:
 - Statistics & occupancy reports dashboard for administrators.
