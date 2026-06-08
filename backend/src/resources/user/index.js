@@ -1,4 +1,6 @@
 const { sqlRequest } = require('../../db');
+const bcrypt = require('bcrypt');
+const SALT_ROUNDS = 10;
 
 const USER_FIELDS = `
         u.id,
@@ -9,24 +11,21 @@ const USER_FIELDS = `
 
 
 module.exports = {
-    add: async (password, email, username, carplate, role)=>{
-        const result = await sqlRequest()
-            .input('password', password)
-            .input('email', email)
-            .input('username', username)
-            .input('carplate', carplate)
-            .input('role', role)
-            .query(`
-                INSERT INTO Users(password, email, username, carplate, roleId)
-
-                select @password as password, @email as email, @username as username, @carplate as carplate, id as roleId
-                from Roles
-                where name like @role
-
-                select ${USER_FIELDS} from Users u where u.email like @email
-                `)
-        return result.recordset;
-    },
+    add: async (password, email, username, carplate, role) => {
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    const result = await sqlRequest()
+        .input('password', hashedPassword)
+        .input('email', email)
+        .input('username', username)
+        .input('carplate', carplate)
+        .input('role', role)
+        .query(`
+            INSERT INTO Users(password, email, username, carplate, roleId)
+            SELECT @password, @email, @username, @carplate, id FROM Roles WHERE name = @role;
+            SELECT u.id, u.email, u.username, u.carplate, u.roleId, r.name
+            FROM Users u INNER JOIN Roles r ON r.id = u.roleId WHERE u.email = @email;`);
+    return result.recordset;
+},
 
     getById : async (id)=>{
         const result = await sqlRequest()
@@ -63,15 +62,10 @@ module.exports = {
 
     getByMail: async(email) => {
         const result = await sqlRequest()
-            .input('email', email)
-            .query(`
-                    SELECT ${USER_FIELDS},
-                        r.name AS roleName
-                    FROM Users u
-                    INNER JOIN Roles r
-                        ON r.id = u.roleId
-                    WHERE u.email = @email
-                `)
+        .input('email', email)
+        .query(`
+            SELECT u.id, u.email, u.username, u.carplate, u.password, u.roleId, r.name
+            FROM Users u INNER JOIN Roles r ON r.id = u.roleId WHERE u.email = @email`);
         return result.recordset[0];
     },
 

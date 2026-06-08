@@ -37,7 +37,6 @@ router.post('/:id/fulfill', verifyLogin, roleChecker([ROLE_LIST.user]), async(ct
     if(!spotId){
         throw { status: 400, message: { error: 'SpotId required' } };
     }
-    //verifica daca ctx.user are acces la spotId
 
     try{
         const reservationRequest = await reservationRequestAPI.getById(reservationRequestId);

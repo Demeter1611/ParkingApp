@@ -96,7 +96,6 @@ router.post('/bulk', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, n
 })
 
 router.post('/:id/allocate', verifyLogin, roleChecker([ROLE_LIST.parking]), async(ctx, next) => {
-    //sterge tabela de allocate ca am modificat
     const spotId = ctx.params.id;
     const { userId } = ctx.request.body;
     if( !userId ){
@@ -138,8 +137,6 @@ router.delete('/:id/deallocate', verifyLogin, roleChecker([ROLE_LIST.parking]), 
 })
 
 router.post('/:id/release', verifyLogin, async(ctx, next) => {
-    //acopera cazul in care datele se suprapun, windowul ar trebui sa se extinda in cazul acesta
-    //windowul trebuie sa fie neaparat in viitor
     const spotId = ctx.params.id;
     const userId = ctx.user.id;
     

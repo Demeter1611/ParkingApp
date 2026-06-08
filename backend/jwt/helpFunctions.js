@@ -8,6 +8,9 @@ function createToken(id){
     );
     return token;
 }
+function createToken(id){ 
+    return jwt.sign({userId: id}, getSecret(), { expiresIn: 3600 }); 
+}
 
 function decodeToken(token){
     return jwt.verify(token, secret);

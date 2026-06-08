@@ -37,15 +37,15 @@ function isUsernameValid(username){
 }
 
 function isRoleValid(role){
-    const roleList = ['admin', 'user', 'parking'];
+    const roleList = ['user', 'parking'];
     return roleList.includes(role);
 }
 
 router.post('/login', async (ctx, next) => {
     const { email, password, inviteToken } = ctx.request.body;
-    const userSearchResponse = await userAPI.search(email, password);
+    const user = await userAPI.getByMail(email);
     
-    if(userSearchResponse.length == 0) {
+    if(!user || !(await bcrypt.compare(password, user.password))){
         throw {status: 401, message: { error: 'Invalid user!' }};
     }
     
@@ -141,7 +141,7 @@ router.patch('/:id', verifyLogin, async(ctx, next) => {
     }
 })
 
-router.get('/search-suggestions', async(ctx, next) => {
+router.get('/search-suggestions', verifyLogin, roleCheck(['admin']), async(ctx, next) => {
     const { searchTerm, parkingLotId} = ctx.query;
     try{
         const searchResult = await userAPI.getSearchSuggestions(searchTerm, parkingLotId);
