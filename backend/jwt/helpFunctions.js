@@ -9,7 +9,7 @@ function createToken(id){
     return token;
 }
 function createToken(id){ 
-    return jwt.sign({userId: id}, getSecret(), { expiresIn: 3600 }); 
+    return jwt.sign({userId: id}, secret, { expiresIn: 3600 }); 
 }
 
 function decodeToken(token){

@@ -2,10 +2,11 @@ const Router = require('koa-router');
 const router = new Router({
     prefix: '/user'
 });
+const bcrypt = require('bcrypt');
 
 const userAPI = require('../resources/user');
 const jwt = require('../../jwt/helpFunctions');
-const { verifyLogin } = require('../middlewares/auth-middleware');
+const { verifyLogin, roleChecker } = require('../middlewares/auth-middleware');
 const invitationTokenAPI = require('../resources/invitation-token');
 const parkingLotAPI = require('../resources/parking-lot');
 
@@ -49,7 +50,7 @@ router.post('/login', async (ctx, next) => {
         throw {status: 401, message: { error: 'Invalid user!' }};
     }
     
-    const newUser = userSearchResponse[0];
+    const newUser = user;
 
     if(inviteToken){
         try{
@@ -141,7 +142,7 @@ router.patch('/:id', verifyLogin, async(ctx, next) => {
     }
 })
 
-router.get('/search-suggestions', verifyLogin, roleCheck(['admin']), async(ctx, next) => {
+router.get('/search-suggestions', verifyLogin, roleChecker(['admin']), async(ctx, next) => {
     const { searchTerm, parkingLotId} = ctx.query;
     try{
         const searchResult = await userAPI.getSearchSuggestions(searchTerm, parkingLotId);
