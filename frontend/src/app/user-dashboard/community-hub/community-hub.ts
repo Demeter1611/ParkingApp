@@ -1,9 +1,10 @@
-import { Component, inject, input } from "@angular/core";
+import { Component, effect, inject, input } from "@angular/core";
 import { ReservationRequestService } from "../../services/reservation-request-service";
 import { ReservationRequest } from "../../interfaces/reservationrequest";
 import { ReservationRequestCard } from "./reservation-request/reservation-request-card";
 import { ParkingSpot } from "../../interfaces/parkingspot";
 import { MatIcon } from "@angular/material/icon";
+import { RefreshService } from "../../services/refresh-service";
 
 @Component({
   selector: 'app-community-hub',
@@ -36,6 +37,7 @@ import { MatIcon } from "@angular/material/icon";
 }) export class CommunityHub {
   parkingLotId = input.required<number>();
   reservationRequestService = inject(ReservationRequestService);
+  private refresh = inject(RefreshService);
   reservationRequests: ReservationRequest[] = [];
   mySpot = input<ParkingSpot | null>();
 
@@ -43,7 +45,10 @@ import { MatIcon } from "@angular/material/icon";
     this.reservationRequests = await this.reservationRequestService.getPendingRequests(this.parkingLotId());
   }
 
-  async ngOnInit(){
-    this.loadReservations();
+  constructor(){
+    effect(() => {
+      this.refresh.version();
+      this.loadReservations();
+    });
   }
 }

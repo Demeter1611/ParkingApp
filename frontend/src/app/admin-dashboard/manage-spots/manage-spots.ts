@@ -5,6 +5,7 @@ import { ParkingLot } from "../../interfaces/parkinglot";
 import { ParkingSpotService } from "../../services/parking-spot-service";
 import { ParkingLotService } from "../../services/parking-lot-service";
 import { ParkingSpot } from "../../interfaces/parkingspot";
+import { RefreshService } from "../../services/refresh-service";
 
 @Component({
   selector: 'app-manage-spots',
@@ -119,6 +120,7 @@ export default class ManageSpotsModalComponent {
   currentParkingLot = input.required<ParkingLot>();
   parkingSpotService = inject(ParkingSpotService);
   parkingLotService = inject(ParkingLotService);
+  private refresh = inject(RefreshService);
   parkingSpots: ParkingSpot[] = [];
   modalVisible = output<boolean>();
 
@@ -135,7 +137,8 @@ export default class ManageSpotsModalComponent {
   async confirmDelete(spotId: number) {
     await this.parkingSpotService.submitDeleteRequest(spotId);
     this.spotToDeleteId = null;
-    this.loadSpots();
+    await this.loadSpots();
+    this.refresh.notify();
   }
 
   bulkForm = new FormGroup({
@@ -188,6 +191,7 @@ export default class ManageSpotsModalComponent {
 
     await this.parkingSpotService.submitAddBulkRequest(requestBody);
 
-    this.loadSpots();
+    await this.loadSpots();
+    this.refresh.notify();
   }
 }

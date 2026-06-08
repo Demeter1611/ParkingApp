@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, effect, inject } from "@angular/core";
 import { TopbarService } from "../services/topbar-service";
 import { TodayStatus } from "./today-status/today-status";
 import { CommunityHub } from "./community-hub/community-hub";
@@ -10,6 +10,7 @@ import ReservationRequestForm from "./reservation-request-form/reservation-reque
 import { Scheduler } from "./scheduler/scheduler";
 import { MatIcon } from "@angular/material/icon";
 import AvailableSpotsView from "./available-spots-view/available-spots-view";
+import { RefreshService } from "../services/refresh-service";
 
 @Component({
   selector: 'app-user-dashboard',
@@ -62,6 +63,7 @@ import AvailableSpotsView from "./available-spots-view/available-spots-view";
   topbarService = inject(TopbarService);
   parkingLotService = inject(ParkingLotService);
   parkingSpotService = inject(ParkingSpotService);
+  private refresh = inject(RefreshService);
   availableSpotsVisible: boolean = false;
   schedulerVisible: boolean = false;
   requestVisible: boolean = false;
@@ -76,9 +78,17 @@ import AvailableSpotsView from "./available-spots-view/available-spots-view";
     this.topbarService.updateTopbar({showTopbar: true, title: "User Dashboard"})
     this.accessibleParkingLots = await this.parkingLotService.getAccessibleParkingLots();
     this.selectedParkingLot = this.accessibleParkingLots[0];
+  }
 
-    const today = new Date();
-    this.mySpot = await this.parkingSpotService.getMine(today);
+  constructor(){
+    effect(() => {
+      this.refresh.version();
+      this.reloadMySpot();
+    });
+  }
+
+  async reloadMySpot(){
+    this.mySpot = await this.parkingSpotService.getMine(new Date());
   }
 
   handleOpenMakeRequest(dates: {startDate: Date, endDate: Date}) {

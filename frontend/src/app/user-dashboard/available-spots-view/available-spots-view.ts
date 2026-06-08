@@ -1,10 +1,11 @@
-import { Component, inject, input, output } from "@angular/core";
+import { Component, effect, inject, input, output } from "@angular/core";
 import { ParkingLot } from "../../interfaces/parkinglot";
 import { ParkingLotService } from "../../services/parking-lot-service";
 import { DatePipe } from "@angular/common";
 import { AuthenticationService } from "../../services/authentication-service";
 import { ReservationService } from "../../services/reservation-service";
 import { MatIcon } from "@angular/material/icon";
+import { RefreshService } from "../../services/refresh-service";
 
 export interface AvailablePeriod {
     startDate: string;
@@ -57,10 +58,18 @@ export default class AvailableSpotsView{
   parkingLotService = inject(ParkingLotService);
   reservationService = inject(ReservationService);
   authService = inject(AuthenticationService);
+  private refresh = inject(RefreshService);
   searchInterval = input.required<{startDate: Date, endDate: Date}>();
   availableSpots: AvailableSpot[] = [];
 
-  async ngOnInit() {
+  constructor(){
+    effect(() => {
+      this.refresh.version();
+      this.loadAvailableSpots();
+    });
+  }
+
+  async loadAvailableSpots() {
     this.availableSpots = await this.parkingLotService.getAllAvailableSpots(this.currentParkingLot().id, this.searchInterval().startDate, this.searchInterval().endDate);
   }
 
@@ -76,6 +85,7 @@ export default class AvailableSpotsView{
     try {
       const response = await this.reservationService.createReservation(reservationData);
       if (response && !response.error) {
+        this.refresh.notify();
         this.selectionCleared.emit();
       }
     } catch (err) {

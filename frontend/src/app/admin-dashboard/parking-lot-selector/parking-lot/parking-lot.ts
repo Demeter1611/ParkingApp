@@ -1,7 +1,8 @@
 import { ParkingLot } from './../../../interfaces/parkinglot';
-import { Component, inject, input, output } from "@angular/core";
+import { Component, effect, inject, input, output } from "@angular/core";
 import { MatIcon } from '@angular/material/icon';
 import { ParkingLotService } from '../../../services/parking-lot-service';
+import { RefreshService } from '../../../services/refresh-service';
 
 @Component({
   selector: 'app-parking-lot',
@@ -50,6 +51,7 @@ import { ParkingLotService } from '../../../services/parking-lot-service';
 export default class ParkingLotComponent{
   parkingLot = input.required<ParkingLot>();
   parkingLotService = inject(ParkingLotService);
+  private refresh = inject(RefreshService);
   actionSelected = output<{action: string, lot: ParkingLot}>();
   totalSpots: number = 0;
   occupiedSpots: number = 0;
@@ -62,8 +64,11 @@ export default class ParkingLotComponent{
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  ngOnInit(){
-    this.loadStats();
+  constructor(){
+    effect(() => {
+      this.refresh.version();
+      this.loadStats();
+    })
   }
 
   async loadStats(){

@@ -3,6 +3,7 @@ import { ReservationRequest } from "../../../interfaces/reservationrequest";
 import { DatePipe } from "@angular/common";
 import { ReservationRequestService } from "../../../services/reservation-request-service";
 import { ParkingSpot } from "../../../interfaces/parkingspot";
+import { RefreshService } from "../../../services/refresh-service";
 
 @Component({
   selector: 'app-reservation-request-card',
@@ -22,6 +23,7 @@ import { ParkingSpot } from "../../../interfaces/parkingspot";
   styleUrls: ['reservation-request-card.css']
 }) export class ReservationRequestCard {
   reservationRequestService = inject(ReservationRequestService);
+  private refresh = inject(RefreshService);
   currentRequest = input.required<ReservationRequest>();
   refreshReservations = output<void>();
   mySpot = input<ParkingSpot | null>();
@@ -32,5 +34,6 @@ import { ParkingSpot } from "../../../interfaces/parkingspot";
       await this.reservationRequestService.fulfillRequest(this.currentRequest().id, {spotId: spot.id});
     }
     this.refreshReservations.emit();
+    this.refresh.notify();
   }
 }

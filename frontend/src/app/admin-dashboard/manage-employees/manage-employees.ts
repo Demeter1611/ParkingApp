@@ -8,6 +8,7 @@ import { ParkingLotService } from "../../services/parking-lot-service";
 import { MatIcon } from "@angular/material/icon";
 import { ParkingSpot } from "../../interfaces/parkingspot";
 import { ParkingSpotService } from "../../services/parking-spot-service";
+import { RefreshService } from "../../services/refresh-service";
 
 interface UserManagementItem{
   id: number,
@@ -141,6 +142,7 @@ export default class ManageEmployeesComponent{
   invitationService = inject(InvitationService);
   parkingLotService = inject(ParkingLotService);
   parkingSpotService = inject(ParkingSpotService);
+  private refresh = inject(RefreshService);
   pendingInvites: InvitationData[] = [];
   currentEmployees: User[] = [];
   modalVisible = output<boolean>();
@@ -244,6 +246,7 @@ export default class ManageEmployeesComponent{
     }
 
     this.cancelAllocation();
-    this.loadData();
+    await this.loadData();
+    this.refresh.notify();
   }
 }

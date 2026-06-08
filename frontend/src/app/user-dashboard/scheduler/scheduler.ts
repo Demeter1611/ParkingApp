@@ -1,7 +1,8 @@
-import { Component, inject, input, output } from "@angular/core";
+import { Component, effect, inject, input, output } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { ParkingSpotService } from "../../services/parking-spot-service";
 import { ParkingSpot } from "../../interfaces/parkingspot";
+import { RefreshService } from "../../services/refresh-service";
 
 interface DayInfo{
   status: string,
@@ -85,6 +86,7 @@ interface CalendarDay{
   ]
   daysOfWeek: string[] = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']
   parkingSpotService = inject(ParkingSpotService);
+  private refresh = inject(RefreshService);
   mySpot = input<ParkingSpot | null>();
   openMakeRequest = output<{startDate: Date, endDate: Date}>();
   openAvailableSpots = output<{startDate: Date, endDate: Date}>();
@@ -159,9 +161,11 @@ interface CalendarDay{
     const today = new Date();
     this.currentMonth = today.getMonth();
     this.currentYear = today.getFullYear();
-    this.generateCalendar(this.currentYear, this.currentMonth);
+    effect(() => {
+      this.refresh.version();
+      this.generateCalendar(this.currentYear, this.currentMonth);
+    });
   }
-
   isPastDate(day: number | null): boolean {
     if (day === null){
       return false;
@@ -277,6 +281,7 @@ interface CalendarDay{
       this.selectionStart = null;
       this.selectionEnd = null;
       this.finalSelection = null;
+      this.refresh.notify();
     }
   }
 
@@ -290,6 +295,7 @@ interface CalendarDay{
       this.selectionStart = null;
       this.selectionEnd = null;
       this.finalSelection = null;
+      this.refresh.notify();
     }
   }
 
